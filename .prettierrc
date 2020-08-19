@@ -4,5 +4,7 @@
 	"jsxSingleQuote": false,
 	"tabWidth": 2,
 	"useTabs": true,
-	"trailingComma": "es5"
+	"trailingComma": "es5",
+	"arrowParens": "avoid",
+	"endOfLine": "crlf"
 }

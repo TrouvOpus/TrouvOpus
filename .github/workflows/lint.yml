@@ -1,0 +1,22 @@
+name: "Lint"
+
+on: ["push", "pull_request"]
+
+jobs:
+  Prettier:
+    name: Prettier
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Run Prettier
+        run: npx prettier --write . "!.github"
+      - name: Configure git
+        run: |
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Actions"
+      - name: Push Changes
+        run: |
+          git add .
+          git diff-index --quiet HEAD || git commit -am "Linted."
+          git push
