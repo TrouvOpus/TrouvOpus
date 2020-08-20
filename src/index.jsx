@@ -4,11 +4,14 @@ import "./index.scss"
 import App from "./App"
 import * as serviceWorker from "./serviceWorker"
 import { BrowserRouter } from "react-router-dom"
+import { userContext } from "./contexts"
 
 ReactDOM.render(
 	<React.StrictMode>
 		<BrowserRouter>
-			<App />
+			<userContext.Provider>
+				<App />
+			</userContext.Provider>
 		</BrowserRouter>
 	</React.StrictMode>,
 	document.getElementById("root")
