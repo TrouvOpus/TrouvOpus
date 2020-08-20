@@ -1,7 +1,4 @@
 .Profile {
-	.Card {
-		padding-left: 3em;
-	}
 	.Sub {
 		display: grid;
 		grid-auto-flow: column;
@@ -12,9 +9,14 @@
 	a {
 		color: white;
 		padding: 1em;
+
 		border-radius: 1em;
 		text-align: center;
 		text-decoration: none;
+		@media screen and (orientation: landscape) {
+			padding-left: 3em;
+			padding-right: 3em;
+		}
 	}
 	a:hover {
 		color: #93c572;
