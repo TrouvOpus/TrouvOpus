@@ -5,6 +5,7 @@ import Card from "./components/Card"
 
 import Error from "./pages/Error.jsx"
 import Login from "./pages/Login.jsx"
+import Profile from "./pages/Profile.jsx"
 
 export default () => (
 	<div className="Routes">
@@ -15,6 +16,7 @@ export default () => (
 				</Card>
 			</Route>
 			<Route path="/login" component={Login} />
+			<Route path="/profile" component={Profile} />
 			<Route component={Error} />
 		</Switch>
 	</div>

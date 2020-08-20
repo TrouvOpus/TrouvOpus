@@ -1,0 +1,22 @@
+.Profile {
+	.Card {
+		padding-left: 3em;
+	}
+	.Sub {
+		display: grid;
+		grid-auto-flow: column;
+		border-radius: 1em;
+		background-color: black;
+	}
+
+	a {
+		color: white;
+		padding: 1em;
+		border-radius: 1em;
+		text-align: center;
+		text-decoration: none;
+	}
+	a:hover {
+		color: #93c572;
+	}
+}
