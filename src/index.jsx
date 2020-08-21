@@ -4,14 +4,14 @@ import "./index.scss"
 import App from "./App"
 import * as serviceWorker from "./serviceWorker"
 import { BrowserRouter } from "react-router-dom"
-import { userContext } from "./contexts"
+import { AuthContextProvider } from "./contexts/AuthContext"
 
 ReactDOM.render(
 	<React.StrictMode>
 		<BrowserRouter>
-			<userContext.Provider>
+			<AuthContextProvider>
 				<App />
-			</userContext.Provider>
+			</AuthContextProvider>
 		</BrowserRouter>
 	</React.StrictMode>,
 	document.getElementById("root")

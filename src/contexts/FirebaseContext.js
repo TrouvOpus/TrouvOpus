@@ -1,6 +1,7 @@
 import firebase from "firebase/app"
 import "firebase/firebase-firestore"
 import "firebase/auth"
+import { createContext } from "react"
 
 const config = {
 	apiKey: "AIzaSyDS_VRkXpVXfm6yBSh7XSf48UA-nH8npFU",
@@ -15,5 +16,12 @@ const config = {
 
 firebase.initializeApp(config)
 
-export const Firestore = firebase.firestore()
-export const Auth = firebase.auth()
+const Firestore = firebase.firestore()
+const Auth = firebase.auth()
+
+const FirebaseContext = createContext({
+	Firestore,
+	Auth,
+})
+
+export default FirebaseContext

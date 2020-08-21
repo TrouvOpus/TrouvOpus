@@ -3,8 +3,10 @@ import "./App.scss"
 
 import Routes from "./Routes"
 
-export default _ => (
-	<div className="App">
-		<Routes />
-	</div>
-)
+export default _ => {
+	return (
+		<div className="App">
+			<Routes />
+		</div>
+	)
+}
