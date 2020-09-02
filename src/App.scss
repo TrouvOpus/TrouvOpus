@@ -8,12 +8,18 @@
 		}
 		margin: 1em auto;
 	}
+
+	.centered {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
+
 	.Page {
 		@extend .container;
-		min-height: 100vh;
-		@media screen and (orientation: landscape) {
-			padding-top: 2em;
-			min-height: 90vh;
-		}
+		@extend .centered;
+		padding-top: 2em;
+		min-height: 90vh;
 	}
 }

@@ -1,0 +1,26 @@
+@import "../global.scss";
+
+.Input {
+	display: grid;
+	padding: 0.5em 0;
+
+	label {
+		font-size: 0.75em;
+		padding: 0.5em 0;
+	}
+
+	input {
+		padding: 0.5em 1em;
+		font-size: 1em;
+		border: 0.125em solid transparent;
+		border-radius: 1.5em;
+		box-shadow: 0 0.125em 1em -0.5em rgba(black, 0.5);
+		transition: all 0.5s ease;
+
+		&:focus {
+			outline: 0;
+			border-color: $accent;
+			color: $accent;
+		}
+	}
+}

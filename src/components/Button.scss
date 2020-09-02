@@ -1,0 +1,25 @@
+@import "../global.scss";
+
+.Button {
+	border: 0;
+	width: 100%;
+	background: $accent;
+	padding: 0.5em 0;
+	margin: 1em 0;
+	color: white;
+	text-align: center;
+	font-size: 1.125em;
+	font-weight: bolder;
+	border-radius: 1.5em;
+	box-shadow: 0 0.125em 1em -0.5em rgba(black, 0.5);
+	transition: all 0.5s ease;
+
+	&:focus {
+		outline: none;
+	}
+
+	&:hover {
+		background: mix($accent, black, 75%);
+		box-shadow: 0 0.125em 1em -0.25em rgba(black, 0.5);
+	}
+}
