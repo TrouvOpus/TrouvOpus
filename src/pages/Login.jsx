@@ -2,6 +2,7 @@ import React from "react"
 import FirebaseContext from "../contexts/FirebaseContext"
 import {
 	Grid,
+	Card,
 	TextField,
 	Button,
 	Tab,
@@ -82,102 +83,104 @@ export default () => {
 			>
 				<Alert severity="error">{errorMsg}</Alert>
 			</Snackbar>
-			<TabContext value={tab}>
-				<TabList
-					onChange={(e, n) => {
-						setTab(n)
-						clearForm()
-					}}
-					variant="fullWidth"
-				>
-					<Tab value="login" label="Login" />
-					<Tab value="signup" label="Sign Up" />
-				</TabList>
-				<TabPanel value="login">
-					<form
-						onSubmit={e => {
-							e.preventDefault()
-							login()
+			<Card>
+				<TabContext value={tab}>
+					<TabList
+						onChange={(e, n) => {
+							setTab(n)
+							clearForm()
 						}}
+						variant="fullWidth"
 					>
-						<Grid
-							container
-							direction="column"
-							justify="center"
-							alignItems="center"
-							spacing={2}
+						<Tab value="login" label="Login" />
+						<Tab value="signup" label="Sign Up" />
+					</TabList>
+					<TabPanel value="login">
+						<form
+							onSubmit={e => {
+								e.preventDefault()
+								login()
+							}}
 						>
-							<Grid item>
-								<TextField
-									label="E-mail Address"
-									value={email}
-									onChange={e => setEmail(e.target.value)}
-								/>
+							<Grid
+								container
+								direction="column"
+								justify="center"
+								alignItems="center"
+								spacing={2}
+							>
+								<Grid item>
+									<TextField
+										label="E-mail Address"
+										value={email}
+										onChange={e => setEmail(e.target.value)}
+									/>
+								</Grid>
+								<Grid item>
+									<TextField
+										label="Password"
+										type="password"
+										value={password}
+										onChange={e => setPassword(e.target.value)}
+									/>
+								</Grid>
+								<Grid item>
+									<Button
+										color="primary"
+										variant="contained"
+										expand="block"
+										type="submit"
+									>
+										Login
+									</Button>
+								</Grid>
 							</Grid>
-							<Grid item>
-								<TextField
-									label="Password"
-									type="password"
-									value={password}
-									onChange={e => setPassword(e.target.value)}
-								/>
-							</Grid>
-							<Grid item>
-								<Button
-									color="primary"
-									variant="contained"
-									expand="block"
-									type="submit"
-								>
-									Login
-								</Button>
-							</Grid>
-						</Grid>
-					</form>
-				</TabPanel>
-				<TabPanel value="signup">
-					<form
-						onSubmit={e => {
-							e.preventDefault()
-							signup(email, password)
-						}}
-					>
-						<Grid
-							container
-							direction="column"
-							justify="center"
-							alignItems="center"
-							spacing={2}
+						</form>
+					</TabPanel>
+					<TabPanel value="signup">
+						<form
+							onSubmit={e => {
+								e.preventDefault()
+								signup(email, password)
+							}}
 						>
-							<Grid item>
-								<TextField
-									label="E-mail Address"
-									value={email}
-									onChange={e => setEmail(e.target.value)}
-								/>
+							<Grid
+								container
+								direction="column"
+								justify="center"
+								alignItems="center"
+								spacing={2}
+							>
+								<Grid item>
+									<TextField
+										label="E-mail Address"
+										value={email}
+										onChange={e => setEmail(e.target.value)}
+									/>
+								</Grid>
+								<Grid item>
+									<TextField
+										label="Password"
+										type="password"
+										value={password}
+										onChange={e => setPassword(e.target.value)}
+									/>
+								</Grid>
+								<Grid item>
+									<Button
+										color="primary"
+										variant="contained"
+										expand="block"
+										type="submit"
+									>
+										Create an Account
+									</Button>
+								</Grid>
 							</Grid>
-							<Grid item>
-								<TextField
-									label="Password"
-									type="password"
-									value={password}
-									onChange={e => setPassword(e.target.value)}
-								/>
-							</Grid>
-							<Grid item>
-								<Button
-									color="primary"
-									variant="contained"
-									expand="block"
-									type="submit"
-								>
-									Create an Account
-								</Button>
-							</Grid>
-						</Grid>
-					</form>
-				</TabPanel>
-			</TabContext>
+						</form>
+					</TabPanel>
+				</TabContext>
+			</Card>
 		</div>
 	)
 }
