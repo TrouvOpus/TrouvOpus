@@ -2,8 +2,10 @@ import React from "react"
 import { Tab, Card } from "@material-ui/core"
 import { TabPanel, TabList, TabContext } from "@material-ui/lab"
 
+import Resume from "../components/Resume"
+
 export default _ => {
-	const [active, setActive] = React.useState("vansi")
+	const [active, setActive] = React.useState("Profile")
 	return (
 		<div className="Profile">
 			<Card>
@@ -17,8 +19,10 @@ export default _ => {
 						<Tab label="Ads" value="Ads" />
 					</TabList>
 					<TabPanel value="Profile"> Settings </TabPanel>
-					<TabPanel value="Resume">Resume</TabPanel>
-					<TabPanel value="Ads">Ads</TabPanel>
+					<TabPanel value="Resume">
+						<Resume />
+					</TabPanel>
+					<TabPanel value="Ads"> Ads </TabPanel>
 				</TabContext>
 			</Card>
 		</div>
