@@ -19,8 +19,10 @@ export default () => {
 	const [isLoading, setIsLoading] = React.useState(false)
 	const [successMsg, setSuccessMsg] = React.useState()
 	const [errorMsg, setErrorMsg] = React.useState()
+	const [user, setUser] = React.useState()
 
 	const { Auth } = React.useContext(FirebaseContext)
+	React.useEffect(() => setUser(Auth.currentUser), [Auth])
 
 	function clearForm() {
 		setEmail("")
@@ -28,11 +30,11 @@ export default () => {
 	}
 
 	async function login() {
-		let user
+		let u
 		try {
 			setIsLoading(true)
-			user = await Auth.signInWithEmailAndPassword(email, password)
-			console.log("Logged in", user || Auth.currentUser)
+			u = await Auth.signInWithEmailAndPassword(email, password)
+			console.log("Logged in", u || user)
 			setSuccessMsg("Logged in!")
 			clearForm()
 		} catch (error) {
@@ -41,15 +43,15 @@ export default () => {
 		} finally {
 			setIsLoading(false)
 		}
-		return user
+		return u
 	}
 
 	async function signup() {
-		let user
+		let u
 		try {
 			setIsLoading(true)
-			user = await Auth.createUserWithEmailAndPassword(email, password)
-			console.log("Created user", user || Auth.currentUser)
+			u = await Auth.createUserWithEmailAndPassword(email, password)
+			console.log("Created user", u || user)
 			setSuccessMsg("User created!")
 			clearForm()
 		} catch (error) {
@@ -57,9 +59,8 @@ export default () => {
 			setErrorMsg(error.message)
 		} finally {
 			setIsLoading(false)
-			console.log("Auth", Auth.currentUser)
 		}
-		return user
+		return u
 	}
 
 	return (
