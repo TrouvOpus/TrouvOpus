@@ -1,187 +1,152 @@
 import React from "react"
-import FirebaseContext from "../contexts/FirebaseContext"
-import {
-	Grid,
-	Card,
-	TextField,
-	Button,
-	Tab,
-	CircularProgress,
-	Backdrop,
-	Snackbar,
-} from "@material-ui/core"
-import { TabList, TabPanel, TabContext, Alert } from "@material-ui/lab"
+import { Grid, Card, TextField, Button, Tab } from "@material-ui/core"
+import { TabList, TabPanel, TabContext } from "@material-ui/lab"
+import { useAuth } from "../hooks"
 
 export default () => {
 	const [tab, setTab] = React.useState("login")
 	const [email, setEmail] = React.useState("")
 	const [password, setPassword] = React.useState("")
-	const [isLoading, setIsLoading] = React.useState(false)
-	const [successMsg, setSuccessMsg] = React.useState()
-	const [errorMsg, setErrorMsg] = React.useState()
-	const [user, setUser] = React.useState()
 
-	const { Auth } = React.useContext(FirebaseContext)
-	React.useEffect(() => setUser(Auth.currentUser), [Auth])
+	const {
+		currentUser,
+		signInWithEmailAndPassword,
+		signUpWithEmailAndPassword,
+		signOut,
+	} = useAuth()
 
 	function clearForm() {
 		setEmail("")
 		setPassword("")
 	}
 
-	async function login() {
-		let u
-		try {
-			setIsLoading(true)
-			u = await Auth.signInWithEmailAndPassword(email, password)
-			console.log("Logged in", u || user)
-			setSuccessMsg("Logged in!")
-			clearForm()
-		} catch (error) {
-			console.error(error.code, error.message)
-			setErrorMsg(error.message)
-		} finally {
-			setIsLoading(false)
-		}
-		return u
-	}
-
-	async function signup() {
-		let u
-		try {
-			setIsLoading(true)
-			u = await Auth.createUserWithEmailAndPassword(email, password)
-			console.log("Created user", u || user)
-			setSuccessMsg("User created!")
-			clearForm()
-		} catch (error) {
-			console.error(error.code, error.message)
-			setErrorMsg(error.message)
-		} finally {
-			setIsLoading(false)
-		}
-		return u
-	}
-
 	return (
 		<div className="Login">
-			<Backdrop open={isLoading}>
-				<CircularProgress color="secondary" />
-			</Backdrop>
-			<Snackbar
-				open={successMsg}
-				autoHideDuration={5000}
-				onClose={() => setSuccessMsg(undefined)}
-				anchorOrigin={{ vertical: "top", horizontal: "right" }}
-			>
-				<Alert severity="success">{successMsg}</Alert>
-			</Snackbar>
-			<Snackbar
-				open={errorMsg}
-				autoHideDuration={5000}
-				onClose={() => setErrorMsg(undefined)}
-				anchorOrigin={{ vertical: "top", horizontal: "right" }}
-			>
-				<Alert severity="error">{errorMsg}</Alert>
-			</Snackbar>
-			<Card>
-				<TabContext value={tab}>
-					<TabList
-						onChange={(e, n) => {
-							setTab(n)
-							clearForm()
-						}}
-						variant="fullWidth"
+			{currentUser ? (
+				<Card>
+					<Grid
+						container
+						direction="column"
+						justify="center"
+						alignItems="center"
+						spacing={2}
 					>
-						<Tab value="login" label="Login" />
-						<Tab value="signup" label="Sign Up" />
-					</TabList>
-					<TabPanel value="login">
-						<form
-							onSubmit={e => {
-								e.preventDefault()
-								login()
-							}}
-						>
-							<Grid
-								container
-								direction="column"
-								justify="center"
-								alignItems="center"
-								spacing={2}
+						<Grid item>{currentUser && currentUser.email} is logged in!</Grid>
+						<Grid item>
+							<Button
+								color="primary"
+								variant="contained"
+								expand="block"
+								type="submit"
+								onClick={() => signOut()}
 							>
-								<Grid item>
-									<TextField
-										label="E-mail Address"
-										value={email}
-										onChange={e => setEmail(e.target.value)}
-									/>
-								</Grid>
-								<Grid item>
-									<TextField
-										label="Password"
-										type="password"
-										value={password}
-										onChange={e => setPassword(e.target.value)}
-									/>
-								</Grid>
-								<Grid item>
-									<Button
-										color="primary"
-										variant="contained"
-										expand="block"
-										type="submit"
-									>
-										Login
-									</Button>
-								</Grid>
-							</Grid>
-						</form>
-					</TabPanel>
-					<TabPanel value="signup">
-						<form
-							onSubmit={e => {
-								e.preventDefault()
-								signup(email, password)
+								Logout
+							</Button>
+						</Grid>
+					</Grid>
+				</Card>
+			) : (
+				<Card>
+					<TabContext value={tab}>
+						<TabList
+							onChange={(e, n) => {
+								setTab(n)
+								clearForm()
 							}}
+							variant="fullWidth"
 						>
-							<Grid
-								container
-								direction="column"
-								justify="center"
-								alignItems="center"
-								spacing={2}
+							<Tab value="login" label="Login" />
+							<Tab value="signup" label="Sign Up" />
+						</TabList>
+						<TabPanel value="login">
+							<form
+								onSubmit={async e => {
+									e.preventDefault()
+									await signInWithEmailAndPassword(email, password)
+									clearForm()
+								}}
 							>
-								<Grid item>
-									<TextField
-										label="E-mail Address"
-										value={email}
-										onChange={e => setEmail(e.target.value)}
-									/>
+								<Grid
+									container
+									direction="column"
+									justify="center"
+									alignItems="center"
+									spacing={2}
+								>
+									<Grid item>
+										<TextField
+											label="E-mail Address"
+											value={email}
+											onChange={e => setEmail(e.target.value)}
+										/>
+									</Grid>
+									<Grid item>
+										<TextField
+											label="Password"
+											type="password"
+											value={password}
+											onChange={e => setPassword(e.target.value)}
+										/>
+									</Grid>
+									<Grid item>
+										<Button
+											color="primary"
+											variant="contained"
+											expand="block"
+											type="submit"
+										>
+											Login
+										</Button>
+									</Grid>
 								</Grid>
-								<Grid item>
-									<TextField
-										label="Password"
-										type="password"
-										value={password}
-										onChange={e => setPassword(e.target.value)}
-									/>
+							</form>
+						</TabPanel>
+						<TabPanel value="signup">
+							<form
+								onSubmit={async e => {
+									e.preventDefault()
+									await signUpWithEmailAndPassword(email, password)
+									clearForm()
+								}}
+							>
+								<Grid
+									container
+									direction="column"
+									justify="center"
+									alignItems="center"
+									spacing={2}
+								>
+									<Grid item>
+										<TextField
+											label="E-mail Address"
+											value={email}
+											onChange={e => setEmail(e.target.value)}
+										/>
+									</Grid>
+									<Grid item>
+										<TextField
+											label="Password"
+											type="password"
+											value={password}
+											onChange={e => setPassword(e.target.value)}
+										/>
+									</Grid>
+									<Grid item>
+										<Button
+											color="primary"
+											variant="contained"
+											expand="block"
+											type="submit"
+										>
+											Create an Account
+										</Button>
+									</Grid>
 								</Grid>
-								<Grid item>
-									<Button
-										color="primary"
-										variant="contained"
-										expand="block"
-										type="submit"
-									>
-										Create an Account
-									</Button>
-								</Grid>
-							</Grid>
-						</form>
-					</TabPanel>
-				</TabContext>
-			</Card>
+							</form>
+						</TabPanel>
+					</TabContext>
+				</Card>
+			)}
 		</div>
 	)
 }

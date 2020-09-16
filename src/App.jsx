@@ -11,6 +11,7 @@ import { blueGrey, amber } from "@material-ui/core/colors"
 
 import Routes from "./Routes"
 import Navigation from "./components/Navigation"
+import { useAuth } from "./hooks"
 
 export default _ => {
 	// const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)")
@@ -27,12 +28,14 @@ export default _ => {
 		},
 	})
 
+	const { currentUser } = useAuth()
+
 	return (
 		<div className="App">
 			<ThemeProvider theme={theme}>
 				<CssBaseline />
 				<Routes />
-				<Navigation />
+				{currentUser && <Navigation />}
 			</ThemeProvider>
 		</div>
 	)

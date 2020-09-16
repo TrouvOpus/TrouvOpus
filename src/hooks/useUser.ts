@@ -6,19 +6,24 @@ export type User = firestore.DocumentData | undefined | null
 
 /**
  * A hook that handles user data.
+ * @param uid The user's unique identification key.
+ * @param listen A boolean value that determines if the hook should listen for changes in the Firestore.
+ * @param create A boolean value that determines if the user should be created in the Firestore if it doesn't already exist.
  * @returns An object with the currently logged in user and a function to set the user.
  */
 
 export function useUser(
 	uid: string,
-	listen: boolean = false
+	listen: boolean = false,
+	create: boolean = false
 ): {
 	user: User
 	getUser: () => void
 	updateUser: (updates: firestore.UpdateData) => void
 } {
 	const { Firestore } = React.useContext(FirebaseContext)
-	const [user, setUser] = React.useState<User>()
+	const [user, setUser] = React.useState<User>(null)
+	const [exists, setExists] = React.useState<boolean>(false)
 
 	/**
 	 * To get the user's data from the Cloud Firestore
@@ -27,12 +32,27 @@ export function useUser(
 	const getUser = React.useCallback(async () => {
 		let u
 		try {
-			u = await (await Firestore.collection("users").doc(uid).get()).data()
+			let doc = await Firestore.collection("users").doc(uid).get()
+			setExists(doc.exists)
+			u = doc.data()
 			setUser(u)
 		} catch (err) {
 			console.error(err)
 		}
 	}, [Firestore, uid])
+
+	/**
+	 * To create the user's document in the Cloud Firestore if it doesn't already exist
+	 */
+
+	const createUserDoc = React.useCallback(async () => {
+		try {
+			await getUser()
+			if (!exists) await Firestore.collection("users").doc(uid).set({})
+		} catch (err) {
+			console.error(err)
+		}
+	}, [getUser, exists, Firestore, uid])
 
 	/**
 	 * To update a user's data in the Cloud Firestore
@@ -46,6 +66,14 @@ export function useUser(
 			console.error(err)
 		}
 	}
+
+	/**
+	 * An effect to create a user if it doesn't already exist
+	 */
+
+	React.useEffect(() => {
+		if (create) createUserDoc()
+	}, [create, createUserDoc, uid])
 
 	/**
 	 * An effect to get the user's data and/or listen for changes.
