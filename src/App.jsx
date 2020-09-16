@@ -9,6 +9,7 @@ import {
 	// useMediaQuery,
 } from "@material-ui/core"
 import { blueGrey, amber } from "@material-ui/core/colors"
+import { SnackbarProvider } from "notistack"
 
 import Routes from "./Routes"
 import Navigation from "./components/Navigation"
@@ -42,11 +43,18 @@ export default _ => {
 	return (
 		<div className="App">
 			<ThemeProvider theme={theme}>
-				<CssBaseline />
-				<Container maxWidth="md" className={classes.container}>
-					<Routes />
-				</Container>
-				{currentUser && <Navigation />}
+				<SnackbarProvider
+					anchorOrigin={{
+						vertical: "top",
+						horizontal: "right",
+					}}
+				>
+					<CssBaseline />
+					<Container maxWidth="md" className={classes.container}>
+						<Routes />
+					</Container>
+					{currentUser && <Navigation />}
+				</SnackbarProvider>
 			</ThemeProvider>
 		</div>
 	)

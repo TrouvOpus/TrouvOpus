@@ -2,18 +2,57 @@ import React from "react"
 import { Grid, Card, Box, TextField, Button, Tab } from "@material-ui/core"
 import { TabList, TabPanel, TabContext } from "@material-ui/lab"
 import { useAuth } from "../hooks"
+import { useSnackbar } from "notistack"
+import FirebaseContext from "../contexts/FirebaseContext"
 
 export default () => {
 	const [tab, setTab] = React.useState("login")
 	const [email, setEmail] = React.useState("")
 	const [password, setPassword] = React.useState("")
 
-	const {
-		currentUser,
-		signInWithEmailAndPassword,
-		signUpWithEmailAndPassword,
-		signOut,
-	} = useAuth()
+	const { enqueueSnackbar } = useSnackbar()
+
+	const { currentUser } = useAuth()
+	const { Auth } = React.useContext(FirebaseContext)
+
+	async function signIn(e) {
+		e.preventDefault()
+		try {
+			await Auth.signInWithEmailAndPassword(email, password)
+			enqueueSnackbar("Logged in!", { variant: "success" })
+		} catch (error) {
+			enqueueSnackbar(error.message, {
+				variant: "error",
+			})
+		}
+		clearForm()
+	}
+
+	async function signUp(e) {
+		e.preventDefault()
+		try {
+			await Auth.createUserWithEmailAndPassword(email, password)
+			enqueueSnackbar("User created!", { variant: "success" })
+		} catch (error) {
+			enqueueSnackbar(error.message, {
+				variant: "error",
+			})
+		}
+		clearForm()
+	}
+
+	async function signOut(e) {
+		e.preventDefault()
+		try {
+			await Auth.signOut()
+			enqueueSnackbar("Logged out")
+		} catch (error) {
+			enqueueSnackbar(error.message, {
+				variant: "error",
+			})
+		}
+		clearForm()
+	}
 
 	function clearForm() {
 		setEmail("")
@@ -39,7 +78,7 @@ export default () => {
 									variant="contained"
 									expand="block"
 									type="submit"
-									onClick={() => signOut()}
+									onClick={signOut}
 								>
 									Logout
 								</Button>
@@ -61,13 +100,7 @@ export default () => {
 							<Tab value="signup" label="Sign Up" />
 						</TabList>
 						<TabPanel value="login">
-							<form
-								onSubmit={async e => {
-									e.preventDefault()
-									await signInWithEmailAndPassword(email, password)
-									clearForm()
-								}}
-							>
+							<form onSubmit={signIn}>
 								<Grid
 									container
 									direction="column"
@@ -104,13 +137,7 @@ export default () => {
 							</form>
 						</TabPanel>
 						<TabPanel value="signup">
-							<form
-								onSubmit={async e => {
-									e.preventDefault()
-									await signUpWithEmailAndPassword(email, password)
-									clearForm()
-								}}
-							>
+							<form onSubmit={signUp}>
 								<Grid
 									container
 									direction="column"
