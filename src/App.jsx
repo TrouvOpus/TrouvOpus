@@ -1,10 +1,11 @@
 import React from "react"
-import "./App.scss"
 
 import {
 	ThemeProvider,
 	createMuiTheme,
 	CssBaseline,
+	Container,
+	makeStyles,
 	// useMediaQuery,
 } from "@material-ui/core"
 import { blueGrey, amber } from "@material-ui/core/colors"
@@ -12,6 +13,12 @@ import { blueGrey, amber } from "@material-ui/core/colors"
 import Routes from "./Routes"
 import Navigation from "./components/Navigation"
 import { useAuth } from "./hooks"
+
+const useStyles = makeStyles({
+	container: {
+		marginTop: 25,
+	},
+})
 
 export default _ => {
 	// const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)")
@@ -28,13 +35,17 @@ export default _ => {
 		},
 	})
 
+	const classes = useStyles()
+
 	const { currentUser } = useAuth()
 
 	return (
 		<div className="App">
 			<ThemeProvider theme={theme}>
 				<CssBaseline />
-				<Routes />
+				<Container maxWidth="md" className={classes.container}>
+					<Routes />
+				</Container>
 				{currentUser && <Navigation />}
 			</ThemeProvider>
 		</div>

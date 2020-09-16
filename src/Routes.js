@@ -4,7 +4,7 @@ import { Switch, Route } from "react-router-dom"
 import Home from "./pages/Home.jsx"
 import Login from "./pages/Login.jsx"
 import Error from "./pages/Error.jsx"
-import Profile from "./pages/Profile.jsx"
+import Profile from "./pages/Profile/index.jsx"
 
 export default () => (
 	<div className="Routes">
