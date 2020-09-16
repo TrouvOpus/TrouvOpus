@@ -32,6 +32,9 @@ export function useUser(
 	const getUser = React.useCallback(async () => {
 		let u
 		try {
+			if (!uid) {
+				return
+			}
 			let doc = await Firestore.collection("users").doc(uid).get()
 			setExists(doc.exists)
 			u = doc.data()
@@ -47,6 +50,9 @@ export function useUser(
 
 	const createUserDoc = React.useCallback(async () => {
 		try {
+			if (!uid) {
+				return
+			}
 			await getUser()
 			if (!exists) await Firestore.collection("users").doc(uid).set({})
 		} catch (err) {
@@ -61,6 +67,9 @@ export function useUser(
 
 	async function updateUser(updates: firestore.UpdateData) {
 		try {
+			if (!uid) {
+				return
+			}
 			await Firestore.collection("users").doc(uid).update(updates)
 		} catch (err) {
 			console.error(err)
@@ -79,14 +88,16 @@ export function useUser(
 	 * An effect to get the user's data and/or listen for changes.
 	 */
 	React.useEffect(
-		listen
-			? () =>
-					Firestore.collection("users")
-						.doc(uid)
-						.onSnapshot(snapshot => setUser(snapshot.data()))
-			: () => {
-					getUser()
-			  },
+		uid
+			? listen
+				? () =>
+						Firestore.collection("users")
+							.doc(uid)
+							.onSnapshot(snapshot => setUser(snapshot.data()))
+				: () => {
+						getUser()
+				  }
+			: () => {},
 		[listen, Firestore, uid]
 	)
 

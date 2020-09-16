@@ -12,21 +12,17 @@ import {
 	FormLabel,
 	FormGroup,
 } from "@material-ui/core"
-import { useUser } from "../hooks"
-import FirebaseContext from "../contexts/FirebaseContext"
+import { useUser, useAuth } from "../hooks"
 
 export default _ => {
-	const { Auth } = React.useContext(FirebaseContext)
-
-	const uid = Auth && Auth.currentUser && Auth.currentUser.uid
-	const { user, updateUser } = useUser(uid, true)
+	const { currentUser } = useAuth()
+	const { user, updateUser } = useUser(currentUser && currentUser.uid, true)
 
 	const [name, setName] = React.useState()
 	const [email, setEmail] = React.useState()
 	const [phone, setPhone] = React.useState()
 	const [gender, setGender] = React.useState("male")
 	const [dob, setDOB] = React.useState()
-	const [uni, setUni] = React.useState()
 	const [jobPref, setJobPref] = React.useState({
 		job: true,
 		internship: false,
@@ -39,12 +35,14 @@ export default _ => {
 		if (user) {
 			setName(user.name)
 			setGender(user.gender)
-			setUni(user.uni)
+			setEmail(user.email)
+			setPhone(user.phone)
+			setDOB(user.DOB)
 			setJobPref(user.jobPref)
 		}
 	}, [user])
 
-	const formData = { name, gender, dob, uni, jobPref }
+	const formData = { name, gender, email, phone, dob, jobPref }
 
 	function getUpdatedData() {
 		let data = {}
@@ -73,7 +71,7 @@ export default _ => {
 						save()
 					}}
 				>
-					<Grid container direction="column">
+					<Grid container direction="column" spacing={1}>
 						<Grid item>
 							<TextField
 								label="Name"
@@ -84,11 +82,23 @@ export default _ => {
 							/>
 						</Grid>
 						<Grid item>
-							<TextField label="E-mail Address" />
+							<TextField
+								label="E-mail Address"
+								value={email}
+								onChange={e => {
+									setEmail(e.target.value)
+								}}
+							/>
 						</Grid>
 
 						<Grid item>
-							<TextField label="Phone" />
+							<TextField
+								label="Phone"
+								value={phone}
+								onChange={e => {
+									setPhone(e.target.value)
+								}}
+							/>
 						</Grid>
 						<FormControl>
 							<FormLabel>Gender</FormLabel>
@@ -96,7 +106,7 @@ export default _ => {
 								value={gender}
 								onChange={e => setGender(e.target.value)}
 							>
-								<Grid container direction="row">
+								<Grid container direction="row" spacing={1}>
 									<FormControlLabel
 										value="male"
 										control={<Radio />}
@@ -125,15 +135,6 @@ export default _ => {
 								}}
 								onChange={e => {
 									setDOB(e.target.value)
-								}}
-							/>
-						</Grid>
-						<Grid>
-							<TextField
-								label="University"
-								value={uni}
-								onChange={e => {
-									setUni(e.target.value)
 								}}
 							/>
 						</Grid>
