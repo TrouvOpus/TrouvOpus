@@ -1,5 +1,5 @@
 import React from "react"
-import { Grid, Card, TextField, Button, Tab } from "@material-ui/core"
+import { Grid, Card, Box, TextField, Button, Tab } from "@material-ui/core"
 import { TabList, TabPanel, TabContext } from "@material-ui/lab"
 import { useAuth } from "../hooks"
 
@@ -24,26 +24,28 @@ export default () => {
 		<div className="Login">
 			{currentUser ? (
 				<Card>
-					<Grid
-						container
-						direction="column"
-						justify="center"
-						alignItems="center"
-						spacing={2}
-					>
-						<Grid item>{currentUser && currentUser.email} is logged in!</Grid>
-						<Grid item>
-							<Button
-								color="primary"
-								variant="contained"
-								expand="block"
-								type="submit"
-								onClick={() => signOut()}
-							>
-								Logout
-							</Button>
+					<Box p={2}>
+						<Grid
+							container
+							direction="column"
+							justify="center"
+							alignItems="center"
+							spacing={2}
+						>
+							<Grid item>{currentUser && currentUser.email} is logged in!</Grid>
+							<Grid item>
+								<Button
+									color="primary"
+									variant="contained"
+									expand="block"
+									type="submit"
+									onClick={() => signOut()}
+								>
+									Logout
+								</Button>
+							</Grid>
 						</Grid>
-					</Grid>
+					</Box>
 				</Card>
 			) : (
 				<Card>

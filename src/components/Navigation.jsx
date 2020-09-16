@@ -1,35 +1,56 @@
 import React from "react"
-import { Link } from "react-router-dom"
-import { BottomNavigation, BottomNavigationAction } from "@material-ui/core"
+import { Link, useLocation } from "react-router-dom"
+import {
+	BottomNavigation,
+	BottomNavigationAction,
+	makeStyles,
+} from "@material-ui/core"
 import { Person, Inbox, Message } from "@material-ui/icons"
-import "./Navigation.scss"
+
+const useStyles = makeStyles({
+	root: {
+		position: "fixed",
+		bottom: 0,
+		left: 0,
+		right: 0,
+	},
+})
+
+const links = [
+	{
+		to: "/profile",
+		name: "Profile",
+		icon: <Person />,
+	},
+	{
+		to: "/feed",
+		name: "Feed",
+		icon: <Inbox />,
+	},
+	{
+		to: "/activity",
+		name: "Activity",
+		icon: <Message />,
+	},
+]
 
 export default () => {
-	const [active, setActive] = React.useState("profile")
+	const classes = useStyles()
+	const location = useLocation()
+
 	return (
 		<div className="Navigation">
-			<BottomNavigation value={active} onChange={(e, n) => setActive(n)}>
-				<BottomNavigationAction
-					component={Link}
-					to="/profile"
-					value="profile"
-					label="Profile"
-					icon={<Person />}
-				/>
-				<BottomNavigationAction
-					component={Link}
-					to="/feed"
-					value="feed"
-					label="Feed"
-					icon={<Inbox />}
-				/>
-				<BottomNavigationAction
-					component={Link}
-					to="/activity"
-					value="activity"
-					label="Activity"
-					icon={<Message />}
-				/>
+			<BottomNavigation value={location.pathname} className={classes.root}>
+				{links.map(link => (
+					<BottomNavigationAction
+						component={Link}
+						key={link.to}
+						to={link.to}
+						value={link.to}
+						label={link.name}
+						icon={link.icon}
+					/>
+				))}
 			</BottomNavigation>
 		</div>
 	)

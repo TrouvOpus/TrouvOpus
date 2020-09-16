@@ -26,7 +26,6 @@ export default _ => {
 	const { user, updateUser } = useUser(currentUser && currentUser.uid, true)
 
 	const [name, setName] = React.useState()
-	const [email, setEmail] = React.useState()
 	const [phone, setPhone] = React.useState()
 	const [gender, setGender] = React.useState("male")
 	const [dob, setDOB] = React.useState()
@@ -38,13 +37,12 @@ export default _ => {
 		if (user) {
 			setName(user.name || name)
 			setGender(user.gender || gender)
-			setEmail(user.email || email)
 			setPhone(user.phone || phone)
 			setDOB(user.dob || dob)
 		}
 	}, [setIsLoading, user])
 
-	const formData = { name, gender, email, phone, dob }
+	const formData = { name, gender, phone, dob }
 
 	function getUpdatedData() {
 		let data = {}
@@ -73,7 +71,7 @@ export default _ => {
 						onChange={() => setActive("Profile")}
 					>
 						<AccordionSummary>
-							<h1>{name}</h1>
+							<h1>Profile</h1>
 						</AccordionSummary>
 						<Container>
 							<AccordionDetails>
@@ -100,11 +98,9 @@ export default _ => {
 													</Grid>
 													<Grid item>
 														<TextField
+															disabled
 															label="E-mail Address"
-															value={email}
-															onChange={e => {
-																setEmail(e.target.value)
-															}}
+															value={currentUser.email}
 														/>
 													</Grid>
 												</Grid>
