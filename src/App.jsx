@@ -18,6 +18,7 @@ import { useAuth } from "./hooks"
 const useStyles = makeStyles({
 	container: {
 		marginTop: 25,
+		marginBottom: 75,
 	},
 })
 
@@ -45,8 +46,8 @@ export default _ => {
 			<ThemeProvider theme={theme}>
 				<SnackbarProvider
 					anchorOrigin={{
-						vertical: "top",
-						horizontal: "right",
+						vertical: "bottom",
+						horizontal: "left",
 					}}
 				>
 					<CssBaseline />

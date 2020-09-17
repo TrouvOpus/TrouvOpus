@@ -1,64 +1,26 @@
 import React from "react"
 import {
-	CircularProgress,
-	Grid,
-	Button,
-	TextField,
-	FormControl,
-	FormControlLabel,
-	FormLabel,
-	Radio,
-	RadioGroup,
 	Container,
 	Accordion,
 	AccordionSummary,
 	AccordionDetails,
+	Box,
+	Button,
 } from "@material-ui/core"
+import { ExpandMore, AccountCircle, Settings } from "@material-ui/icons"
 
-import { useUser, useAuth } from "../../hooks"
+import { withSnackbar } from "notistack"
+
+import { useAuth } from "../../hooks"
+import FirebaseContext from "../../contexts/FirebaseContext"
 
 import Preferences from "./Preferences"
+import Profile from "./Profile"
 
-export default _ => {
+export default withSnackbar(({ enqueueSnackbar }) => {
 	const [active, setActive] = React.useState("Profile")
 	const { currentUser } = useAuth()
-
-	const { user, updateUser } = useUser(currentUser && currentUser.uid, true)
-
-	const [name, setName] = React.useState()
-	const [phone, setPhone] = React.useState()
-	const [gender, setGender] = React.useState("male")
-	const [dob, setDOB] = React.useState()
-
-	const [isLoading, setIsLoading] = React.useState(false)
-
-	React.useEffect(() => {
-		setIsLoading(!user)
-		if (user) {
-			setName(user.name || name)
-			setGender(user.gender || gender)
-			setPhone(user.phone || phone)
-			setDOB(user.dob || dob)
-		}
-	}, [setIsLoading, user])
-
-	const formData = { name, gender, phone, dob }
-
-	function getUpdatedData() {
-		let data = {}
-		Object.keys(formData).forEach(d => {
-			if (formData[d]) data[d] = formData[d]
-		})
-		return data
-	}
-
-	async function save() {
-		try {
-			await updateUser(getUpdatedData())
-		} catch (err) {
-			console.error(err)
-		}
-	}
+	const { Auth } = React.useContext(FirebaseContext)
 
 	return (
 		<div className="Profile">
@@ -70,110 +32,27 @@ export default _ => {
 						expanded={active === "Profile"}
 						onChange={() => setActive("Profile")}
 					>
-						<AccordionSummary>
+						<AccordionSummary expandIcon={<ExpandMore />}>
+							<h1>
+								<AccountCircle color="primary" fontSize="large" />
+							</h1>
 							<h1>Profile</h1>
 						</AccordionSummary>
 						<Container>
 							<AccordionDetails>
-								{isLoading ? (
-									<CircularProgress color="secondary" />
-								) : (
-									<form
-										onSubmit={e => {
-											e.preventDefault()
-											save()
-										}}
-									>
-										<Grid container direction="column" spacing={1}>
-											<Grid item>
-												<Grid container direction="row" spacing={1}>
-													<Grid item>
-														<TextField
-															label="Name"
-															value={name}
-															onChange={e => {
-																setName(e.target.value)
-															}}
-														/>
-													</Grid>
-													<Grid item>
-														<TextField
-															disabled
-															label="E-mail Address"
-															value={currentUser.email}
-														/>
-													</Grid>
-												</Grid>
-											</Grid>
-
-											<Grid item>
-												<TextField
-													label="Phone"
-													value={phone}
-													onChange={e => {
-														setPhone(e.target.value)
-													}}
-												/>
-											</Grid>
-											<FormControl>
-												<FormLabel>Gender</FormLabel>
-												<RadioGroup
-													value={gender}
-													onChange={e => setGender(e.target.value)}
-												>
-													<Grid container direction="row" spacing={1}>
-														<FormControlLabel
-															value="male"
-															control={<Radio />}
-															label="Male"
-														/>
-														<FormControlLabel
-															value="female"
-															control={<Radio />}
-															label="Female"
-														/>
-														<FormControlLabel
-															value="other"
-															control={<Radio />}
-															label="Other"
-														/>
-													</Grid>
-												</RadioGroup>
-											</FormControl>
-											<Grid item>
-												<TextField
-													type="date"
-													label="DOB"
-													value={dob}
-													InputLabelProps={{
-														shrink: true,
-													}}
-													onChange={e => {
-														setDOB(e.target.value)
-													}}
-												/>
-											</Grid>
-											<Grid item>
-												<Button
-													type="submit"
-													variant="contained"
-													color="primary"
-												>
-													Save
-												</Button>
-											</Grid>
-										</Grid>
-									</form>
-								)}
+								<Profile />
 							</AccordionDetails>
 						</Container>
 					</Accordion>
 					<Accordion
-						expanded={active === "Resume"}
-						onChange={() => setActive("Resume")}
+						expanded={active === "Preferences"}
+						onChange={() => setActive("Preferences")}
 					>
-						<AccordionSummary>
-							<h1>Resume</h1>
+						<AccordionSummary expandIcon={<ExpandMore />}>
+							<h1>
+								<Settings color="primary" fontSize="large" />
+							</h1>
+							<h1>Preferences</h1>
 						</AccordionSummary>
 						<AccordionDetails>
 							<Container>
@@ -181,8 +60,24 @@ export default _ => {
 							</Container>
 						</AccordionDetails>
 					</Accordion>
+					<Box my={2}>
+						<Button
+							variant="outlined"
+							color="secondary"
+							onClick={async () => {
+								try {
+									await Auth.signOut()
+									enqueueSnackbar("Logged out")
+								} catch (error) {
+									enqueueSnackbar(error.message, { variant: "error" })
+								}
+							}}
+						>
+							Log Out
+						</Button>
+					</Box>
 				</>
 			)}
 		</div>
 	)
-}
+})

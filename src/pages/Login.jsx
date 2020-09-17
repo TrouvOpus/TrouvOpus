@@ -1,11 +1,20 @@
 import React from "react"
-import { Grid, Card, Box, TextField, Button, Tab } from "@material-ui/core"
+import {
+	Grid,
+	CircularProgress,
+	Card,
+	Box,
+	TextField,
+	Button,
+	Tab,
+} from "@material-ui/core"
 import { TabList, TabPanel, TabContext } from "@material-ui/lab"
 import { useAuth } from "../hooks"
 import { useSnackbar } from "notistack"
 import FirebaseContext from "../contexts/FirebaseContext"
 
 export default () => {
+	const [isLoading, setIsLoading] = React.useState(false)
 	const [tab, setTab] = React.useState("login")
 	const [email, setEmail] = React.useState("")
 	const [password, setPassword] = React.useState("")
@@ -17,6 +26,7 @@ export default () => {
 
 	async function signIn(e) {
 		e.preventDefault()
+		setIsLoading(true)
 		try {
 			await Auth.signInWithEmailAndPassword(email, password)
 			enqueueSnackbar("Logged in!", { variant: "success" })
@@ -25,11 +35,13 @@ export default () => {
 				variant: "error",
 			})
 		}
+		setIsLoading(false)
 		clearForm()
 	}
 
 	async function signUp(e) {
 		e.preventDefault()
+		setIsLoading(true)
 		try {
 			await Auth.createUserWithEmailAndPassword(email, password)
 			enqueueSnackbar("User created!", { variant: "success" })
@@ -38,11 +50,13 @@ export default () => {
 				variant: "error",
 			})
 		}
+		setIsLoading(false)
 		clearForm()
 	}
 
 	async function signOut(e) {
 		e.preventDefault()
+		setIsLoading(true)
 		try {
 			await Auth.signOut()
 			enqueueSnackbar("Logged out")
@@ -51,6 +65,7 @@ export default () => {
 				variant: "error",
 			})
 		}
+		setIsLoading(false)
 		clearForm()
 	}
 
@@ -61,7 +76,13 @@ export default () => {
 
 	return (
 		<div className="Login">
-			{currentUser ? (
+			{isLoading ? (
+				<Grid container alignItems="center" justify="center">
+					<Grid item>
+						<CircularProgress color="secondary" />
+					</Grid>
+				</Grid>
+			) : currentUser ? (
 				<Card>
 					<Box p={2}>
 						<Grid
@@ -111,6 +132,7 @@ export default () => {
 									<Grid item>
 										<TextField
 											label="E-mail Address"
+											type="email"
 											value={email}
 											onChange={e => setEmail(e.target.value)}
 										/>
@@ -149,6 +171,7 @@ export default () => {
 										<TextField
 											label="E-mail Address"
 											value={email}
+											type="email"
 											onChange={e => setEmail(e.target.value)}
 										/>
 									</Grid>
