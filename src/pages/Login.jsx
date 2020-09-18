@@ -3,7 +3,6 @@ import {
 	Grid,
 	CircularProgress,
 	Card,
-	Box,
 	TextField,
 	Button,
 	Tab,
@@ -46,21 +45,6 @@ export default () => {
 		try {
 			await Auth.createUserWithEmailAndPassword(email, password)
 			enqueueSnackbar("User created!", { variant: "success" })
-		} catch (error) {
-			enqueueSnackbar(error.message, {
-				variant: "error",
-			})
-		}
-		setIsLoading(false)
-		clearForm()
-	}
-
-	async function signOut(e) {
-		e.preventDefault()
-		setIsLoading(true)
-		try {
-			await Auth.signOut()
-			enqueueSnackbar("Logged out")
 		} catch (error) {
 			enqueueSnackbar(error.message, {
 				variant: "error",

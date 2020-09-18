@@ -39,10 +39,10 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 	React.useEffect(() => {
 		setIsLoading(!user)
 		if (user) {
-			setName(user.name || name)
-			setGender(user.gender || gender)
-			setPhone(user.phone || phone)
-			setDOB(user.dob || dob)
+			setName(user.name)
+			setGender(user.gender)
+			setPhone(user.phone)
+			setDOB(user.dob)
 		}
 	}, [setIsLoading, user])
 

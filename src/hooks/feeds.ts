@@ -24,20 +24,7 @@ function getCompatibility(
 	for (let i in y) {
 		ysum += y[i]
 	}
-	console.log(
-		"x",
-		x,
-		"\ny",
-		y,
-		"\ncommon",
-		common,
-		"\nsum",
-		sum,
-		"\nysum",
-		ysum,
-		"\rcompat",
-		sum / ysum
-	)
+
 	return sum / ysum
 }
 
