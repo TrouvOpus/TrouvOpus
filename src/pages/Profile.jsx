@@ -14,6 +14,7 @@ import {
 	IconButton,
 } from "@material-ui/core"
 import { withSnackbar } from "notistack"
+import { Redirect } from "react-router-dom"
 import { Autocomplete, Rating } from "@material-ui/lab"
 import { Add, Delete } from "@material-ui/icons"
 import FirebaseContext from "../contexts/FirebaseContext"
@@ -86,8 +87,10 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 		<div className="Profile">
 			<Card>
 				<Box px={4} py={2}>
-					{isLoading ? (
+					{isLoading || currentUser === 0 ? (
 						<CircularProgress color="secondary" />
+					) : !currentUser ? (
+						<Redirect to="/login" />
 					) : (
 						<form
 							onSubmit={e => {

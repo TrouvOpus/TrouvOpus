@@ -9,6 +9,7 @@ import {
 	Tab,
 } from "@material-ui/core"
 import { TabList, TabPanel, TabContext } from "@material-ui/lab"
+import { Redirect } from "react-router-dom"
 import { useAuth } from "../hooks"
 import { useSnackbar } from "notistack"
 import FirebaseContext from "../contexts/FirebaseContext"
@@ -76,37 +77,14 @@ export default () => {
 
 	return (
 		<div className="Login">
-			{isLoading ? (
+			{isLoading || currentUser === 0 ? (
 				<Grid container alignItems="center" justify="center">
 					<Grid item>
 						<CircularProgress color="secondary" />
 					</Grid>
 				</Grid>
 			) : currentUser ? (
-				<Card>
-					<Box p={2}>
-						<Grid
-							container
-							direction="column"
-							justify="center"
-							alignItems="center"
-							spacing={2}
-						>
-							<Grid item>{currentUser && currentUser.email} is logged in!</Grid>
-							<Grid item>
-								<Button
-									color="primary"
-									variant="contained"
-									expand="block"
-									type="submit"
-									onClick={signOut}
-								>
-									Logout
-								</Button>
-							</Grid>
-						</Grid>
-					</Box>
-				</Card>
+				<Redirect to="/profile" />
 			) : (
 				<Card>
 					<TabContext value={tab}>
