@@ -11,8 +11,11 @@ import {
 	Radio,
 	RadioGroup,
 	CircularProgress,
+	IconButton,
 } from "@material-ui/core"
 import { withSnackbar } from "notistack"
+import { Autocomplete, Rating } from "@material-ui/lab"
+import { Add, Delete } from "@material-ui/icons"
 import FirebaseContext from "../contexts/FirebaseContext"
 import { useUser, useAuth } from "../hooks"
 
@@ -25,6 +28,8 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 	const [phone, setPhone] = React.useState()
 	const [gender, setGender] = React.useState("male")
 	const [dob, setDOB] = React.useState()
+	const [skill, setSkill] = React.useState([])
+	const skillSet = ["React", "JavaScript", "CSS"]
 
 	const { Auth } = React.useContext(FirebaseContext)
 
@@ -41,6 +46,25 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 	}, [setIsLoading, user])
 
 	const formData = { name, gender, phone, dob }
+
+	function editSkill(id, key, value) {
+		let skillCopy = [...skill]
+		skillCopy[skillCopy.findIndex(x => x.id === id)][key] = value
+		setSkill(skillCopy)
+	}
+
+	function addSkill() {
+		setSkill([...skill, { id: Date.now(), title: "", rating: 0 }])
+	}
+
+	function removeSkill(id) {
+		setSkill(skill.filter(s => s.id !== id))
+	}
+
+	function filterSkill() {
+		let chosenSkill = skill.map(s => s.title)
+		return skillSet.filter(s => chosenSkill.indexOf(s) === -1)
+	}
 
 	function getUpdatedData() {
 		let data = {}
@@ -150,6 +174,57 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 											setDOB(e.target.value)
 										}}
 									/>
+								</Grid>
+								<Grid item>
+									{skill.map(s => (
+										<Grid item>
+											<Grid container direction="row" spacing={3}>
+												<Grid item>
+													<Autocomplete
+														disableClearable
+														options={filterSkill()}
+														style={{ width: 200 }}
+														renderInput={skills => (
+															<TextField {...skills} label="Skill set" />
+														)}
+														value={s.title}
+														onChange={(event, newValue) =>
+															editSkill(s.id, "title", newValue)
+														}
+													/>
+												</Grid>
+												<Grid item>
+													<Box p={3} borderColor="transparent">
+														<Rating
+															value={s.rating}
+															onChange={(event, newValue) => {
+																editSkill(s.id, "rating", newValue)
+															}}
+															precision={0.5}
+														/>
+													</Box>
+												</Grid>
+												<Grid item>
+													<Box p={1} borderColor="transparent">
+														<IconButton
+															aria-label="delete"
+															onClick={() => removeSkill(s.id)}
+														>
+															<Delete />
+														</IconButton>
+													</Box>
+												</Grid>
+											</Grid>
+										</Grid>
+									))}
+									<Button
+										color="primary"
+										expand="block"
+										startIcon={<Add />}
+										onClick={addSkill}
+									>
+										Add skill
+									</Button>
 								</Grid>
 								<Grid item>
 									<Grid container direction="row" spacing={1}>
