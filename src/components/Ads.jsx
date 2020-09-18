@@ -6,12 +6,25 @@ import {
 	Select,
 	InputLabel,
 	MenuItem,
+	FormGroup,
+	FormControlLabel,
+	Checkbox,
 } from "@material-ui/core"
+export default function CheckboxLabels() {
+	const [state, setState] = React.useState({
+		checkedA: true,
+		checkedB: true,
+		checkedF: true,
+		checkedG: true,
+	})
 
-export default _ => {
+	const handleChange = event => {
+		setState({ ...state, [event.target.name]: event.target.checked })
+	}
+
 	return (
 		<div className="Ads">
-			<Grid container direction="column" justify="center" spacing={3}>
+			<Grid container direction="column" justify="center" spacing={2}>
 				<TextField label="Advertisement Tagline" />
 				<Grid container direction="row" spacing={1}>
 					<Grid item>
@@ -31,7 +44,58 @@ export default _ => {
 					<Grid item>
 						<TextField label="Company Name" />
 					</Grid>
-					<Grid container direction="row" spacing={3}>
+					<Grid container direction="row" spacing={2}>
+						<Grid item>
+							<InputLabel id="label">Work Type</InputLabel>
+							<FormGroup row>
+								<FormControlLabel
+									control={
+										<Checkbox
+											checked={state.checkedA}
+											onChange={handleChange}
+											name="checkedA"
+											color="primary"
+										/>
+									}
+									label="Location Based"
+								/>
+								<FormControlLabel
+									control={
+										<Checkbox
+											checked={state.checkedB}
+											onChange={handleChange}
+											name="checkedB"
+											color="primary"
+										/>
+									}
+									label="Work from Home"
+								/>
+								<FormControlLabel
+									control={
+										<Checkbox
+											checked={state.checkedC}
+											onChange={handleChange}
+											name="checkedC"
+											color="primary"
+										/>
+									}
+									label="Part-Time"
+								/>
+								<FormControlLabel
+									control={
+										<Checkbox
+											checked={state.checkedD}
+											onChange={handleChange}
+											name="checkedD"
+											color="primary"
+										/>
+									}
+									label="Internship"
+								/>
+							</FormGroup>
+						</Grid>
+					</Grid>
+					<Grid container direction="row" spacing={2}>
 						<Grid item>
 							<TextField label="Job Title/Designation" />
 						</Grid>
