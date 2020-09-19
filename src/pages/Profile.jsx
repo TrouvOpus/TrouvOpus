@@ -20,6 +20,31 @@ import { Add, Delete } from "@material-ui/icons"
 import FirebaseContext from "../contexts/FirebaseContext"
 import { useUser, useAuth } from "../hooks"
 
+const skillReducer = (state, action) => {
+	switch (action.type) {
+		case "ADD":
+			return [
+				...state,
+				{
+					id: Date.now(),
+					title: action.title || null,
+					rating: action.rating || 0,
+				},
+			]
+		case "EDIT":
+			let copy = [...state]
+			if (action.key && action.value)
+				copy[copy.findIndex(x => x.id === action.id)][action.key] = action.value
+			return copy
+		case "REMOVE":
+			return state.filter(s => s.id !== action.id)
+		case "CLEAR":
+			return []
+		default:
+			return state
+	}
+}
+
 export default withSnackbar(({ enqueueSnackbar }) => {
 	const { currentUser } = useAuth()
 
@@ -29,7 +54,7 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 	const [phone, setPhone] = React.useState()
 	const [gender, setGender] = React.useState("male")
 	const [dob, setDOB] = React.useState()
-	const [skill, setSkill] = React.useState([])
+	const [skill, dispatchSkill] = React.useReducer(skillReducer, [])
 	const skillSet = ["React", "JavaScript", "CSS"]
 
 	const { Auth } = React.useContext(FirebaseContext)
@@ -43,23 +68,29 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 			setGender(user.gender)
 			setPhone(user.phone)
 			setDOB(user.dob)
+			if (user.skills) {
+				clearSkills()
+				Object.keys(user.skills).forEach(s => {
+					addSkill(s, user.skills[s])
+				})
+			}
 		}
 	}, [setIsLoading, user])
 
-	const formData = { name, gender, phone, dob }
-
-	function editSkill(id, key, value) {
-		let skillCopy = [...skill]
-		skillCopy[skillCopy.findIndex(x => x.id === id)][key] = value
-		setSkill(skillCopy)
+	function addSkill(title = null, rating = 0) {
+		dispatchSkill({ type: "ADD", title: title, rating: rating })
 	}
 
-	function addSkill() {
-		setSkill([...skill, { id: Date.now(), title: "", rating: 0 }])
+	function editSkill(id, key, value) {
+		dispatchSkill({ type: "EDIT", id: id, key: key, value: value })
 	}
 
 	function removeSkill(id) {
-		setSkill(skill.filter(s => s.id !== id))
+		dispatchSkill({ type: "REMOVE", id: id })
+	}
+
+	function clearSkills(id) {
+		dispatchSkill({ type: "CLEAR" })
 	}
 
 	function filterSkill() {
@@ -67,19 +98,25 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 		return skillSet.filter(s => chosenSkill.indexOf(s) === -1)
 	}
 
+	const formData = { name, gender, phone, dob }
+
 	function getUpdatedData() {
 		let data = {}
 		Object.keys(formData).forEach(d => {
 			if (formData[d]) data[d] = formData[d]
 		})
+		data["skills"] = {}
+		skill.forEach(s => (data["skills"][s.title] = s.rating))
 		return data
 	}
 
 	async function save() {
 		try {
 			await updateUser(getUpdatedData())
+			enqueueSnackbar("Saved!", { variant: "success" })
 		} catch (err) {
 			console.error(err)
+			enqueueSnackbar(err.message || err, { variant: "error" })
 		}
 	}
 
@@ -180,12 +217,13 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 								</Grid>
 								<Grid item>
 									{skill.map(s => (
-										<Grid item>
+										<Grid item key={s.id}>
 											<Grid container direction="row" spacing={3}>
 												<Grid item>
 													<Autocomplete
 														disableClearable
 														options={filterSkill()}
+														getOptionSelected={o => o || null}
 														style={{ width: 200 }}
 														renderInput={skills => (
 															<TextField {...skills} label="Skill set" />
@@ -199,6 +237,7 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 												<Grid item>
 													<Box p={3} borderColor="transparent">
 														<Rating
+															name={s.title}
 															value={s.rating}
 															onChange={(event, newValue) => {
 																editSkill(s.id, "rating", newValue)
@@ -225,6 +264,7 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 										expand="block"
 										startIcon={<Add />}
 										onClick={addSkill}
+										disabled={filterSkill().length === 0}
 									>
 										Add skill
 									</Button>
