@@ -26,8 +26,8 @@ const skillReducer = (state, action) => {
 			return [
 				...state,
 				{
-					id: Date.now(),
-					title: action.title || null,
+					id: Math.random(),
+					title: action.title || "",
 					rating: action.rating || 0,
 				},
 			]
@@ -37,7 +37,7 @@ const skillReducer = (state, action) => {
 				copy[copy.findIndex(x => x.id === action.id)][action.key] = action.value
 			return copy
 		case "REMOVE":
-			return state.filter(s => s.id !== action.id)
+			return action.id ? state.filter(s => s.id !== action.id) : state
 		case "CLEAR":
 			return []
 		default:
@@ -55,7 +55,7 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 	const [gender, setGender] = React.useState("male")
 	const [dob, setDOB] = React.useState()
 	const [skill, dispatchSkill] = React.useReducer(skillReducer, [])
-	const skillSet = ["React", "JavaScript", "CSS"]
+	const skillSet = ["React", "JavaScript", "CSS", "SQL", "PHP"]
 
 	const { Auth } = React.useContext(FirebaseContext)
 
@@ -77,7 +77,7 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 		}
 	}, [setIsLoading, user])
 
-	function addSkill(title = null, rating = 0) {
+	function addSkill(title = "", rating = 0) {
 		dispatchSkill({ type: "ADD", title: title, rating: rating })
 	}
 
@@ -89,7 +89,7 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 		dispatchSkill({ type: "REMOVE", id: id })
 	}
 
-	function clearSkills(id) {
+	function clearSkills() {
 		dispatchSkill({ type: "CLEAR" })
 	}
 
@@ -106,7 +106,10 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 			if (formData[d]) data[d] = formData[d]
 		})
 		data["skills"] = {}
-		skill.forEach(s => (data["skills"][s.title] = s.rating))
+		skill.forEach(s => {
+			if (skillSet.includes(s.title) && s.rating !== 0)
+				data["skills"][s.title] = s.rating
+		})
 		return data
 	}
 
