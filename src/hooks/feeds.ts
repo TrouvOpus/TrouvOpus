@@ -2,32 +2,32 @@ import React from "react"
 import FirestoreContext from "../contexts/FirebaseContext"
 import { useUser, useJob } from "."
 
+/**
+ * To return the compatibility of an object with respect to another object.
+ * @param x The object to be compared
+ * @param y The object to be compared against
+ */
 function getCompatibility(
 	x: { [key: string]: number },
 	y: { [key: string]: number }
 ): number {
 	if (!x || !y) return -1
-	const xk = Object.keys(x)
-	const yk = Object.keys(y)
-	const common = xk.filter(x => yk.includes(x))
 	let ratios: { [key: string]: number } = {}
-	for (let c in common) {
-		let i = common[c]
-		ratios[i] = x[i] / y[i]
-		if (ratios[i] >= 1) ratios[i] = 1
-	}
-	let sum: number = 0.0
-	for (let r in ratios) {
-		sum += ratios[r]
-	}
-	let ysum: number = 0.0
-	for (let i in y) {
-		ysum += y[i]
-	}
-
+	Object.keys(x)
+		.filter(i => Object.keys(y).includes(i))
+		.forEach(i => {
+			ratios[i] = x[i] / y[i]
+			if (ratios[i] >= 1) ratios[i] = 1
+		})
+	const sum = Object.values(ratios).reduce((a, b) => a + b)
+	const ysum = Object.values(y).reduce((a, b) => a + b)
 	return sum / ysum
 }
 
+/**
+ * A hook to get all applicable jobs for the given user, along with the compatibility index of the user with respect to each job.
+ * @param id The ID of the user whose feed must be fetched.
+ */
 export function useApplicantFeed(id: string) {
 	const { Firestore } = React.useContext(FirestoreContext)
 	const { user } = useUser(id)
@@ -77,6 +77,10 @@ export function useApplicantFeed(id: string) {
 	return { jobs }
 }
 
+/**
+ * A hook to get all qualified jobs for the given job, along with the compatibility index of each user with respect to the job.
+ * @param id The ID of the job whose qualified applicants must be fetched.
+ */
 export function useRecruiterFeed(id: string) {
 	const { Firestore } = React.useContext(FirestoreContext)
 	const { job } = useJob(id)
@@ -106,7 +110,7 @@ export function useRecruiterFeed(id: string) {
 			Object.keys(c).forEach(
 				u =>
 					(c[u]["compatibility"] =
-						getCompatibility(job && job.skills, users[u].skills) || 0.0)
+						getCompatibility(users[u].skills, job && job.skills) || 0.0)
 			)
 			setUsers(c)
 		},

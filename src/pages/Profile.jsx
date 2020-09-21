@@ -15,7 +15,7 @@ import {
 import { withSnackbar } from "notistack"
 import { Redirect } from "react-router-dom"
 import FirebaseContext from "../contexts/FirebaseContext"
-import { useUser, useAuth } from "../hooks"
+import { useUser, useAuth, useApplicantFeed, useRecruiterFeed } from "../hooks"
 import SkillSelector, {
 	skillReducer,
 	skillSet,
@@ -35,6 +35,11 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 	const [skill, dispatchSkill] = React.useReducer(skillReducer, [])
 
 	const { Auth } = React.useContext(FirebaseContext)
+
+	const { jobs } = useApplicantFeed(currentUser && currentUser.uid)
+	const { users } = useRecruiterFeed("2zGkzfAEJryWkoexYiTA")
+	React.useEffect(() => console.log("Jobs", jobs), [jobs])
+	React.useEffect(() => console.log("Users", users), [users])
 
 	const [isLoading, setIsLoading] = React.useState(false)
 
