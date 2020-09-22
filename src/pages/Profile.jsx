@@ -4,6 +4,7 @@ import { TabPanel, TabList, TabContext } from "@material-ui/lab"
 
 import Resume from "../components/Resume"
 import Ads from "../components/Ads"
+import Feed from "../components/Feed"
 
 export default _ => {
 	const [active, setActive] = React.useState("Profile")
@@ -26,6 +27,10 @@ export default _ => {
 					<TabPanel value="Ads">
 						{" "}
 						<Ads></Ads>{" "}
+					</TabPanel>
+					<TabPanel value="Profile">
+						{" "}
+						<Feed></Feed>{" "}
 					</TabPanel>
 				</TabContext>
 			</Card>
