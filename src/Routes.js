@@ -5,12 +5,14 @@ import Home from "./pages/Home"
 import Login from "./pages/Login"
 import Error from "./pages/Error"
 import Profile from "./pages/Profile"
+import Feed from "./pages/Feed"
 
 export default () => (
 	<div className="Routes">
 		<Switch>
 			<Route path="/login" component={Login} />
 			<Route path="/profile" component={Profile} />
+			<Route path="/feed" component={Feed} />
 			<Route exact path="/" component={Home} />
 			<Route component={Error} />
 		</Switch>
