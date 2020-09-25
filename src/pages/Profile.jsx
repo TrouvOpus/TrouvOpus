@@ -1,217 +1,81 @@
 import React from "react"
+import { Redirect } from "react-router-dom"
 import {
 	Card,
 	Box,
 	Grid,
+	Fab,
+	Dialog,
 	Button,
-	TextField,
-	FormControl,
-	FormControlLabel,
-	FormLabel,
-	Radio,
-	RadioGroup,
+	makeStyles,
+	useTheme,
 	CircularProgress,
 } from "@material-ui/core"
+import { Edit } from "@material-ui/icons"
+import { useAuth, useUser } from "../hooks"
+import EditProfile from "../components/EditProfile"
 import { withSnackbar } from "notistack"
-import { Redirect } from "react-router-dom"
 import FirebaseContext from "../contexts/FirebaseContext"
-import { useUser, useAuth, useApplicantFeed, useRecruiterFeed } from "../hooks"
-import SkillSelector, {
-	skillReducer,
-	skillSet,
-	clearSkills,
-	addSkill,
-} from "../components/SkillSelector"
+
+const useStyles = makeStyles(theme => ({
+	fab: {
+		float: "right",
+		margin: theme.spacing(2),
+	},
+}))
 
 export default withSnackbar(({ enqueueSnackbar }) => {
 	const { currentUser } = useAuth()
-
-	const { user, updateUser } = useUser(currentUser && currentUser.uid, true)
-
-	const [name, setName] = React.useState()
-	const [phone, setPhone] = React.useState()
-	const [gender, setGender] = React.useState("male")
-	const [dob, setDOB] = React.useState()
-	const [skill, dispatchSkill] = React.useReducer(skillReducer, [])
-
 	const { Auth } = React.useContext(FirebaseContext)
+	const { user } = useUser(currentUser && currentUser.uid, true, true)
+	const theme = useTheme()
+	const classes = useStyles(theme)
 
-	const { jobs } = useApplicantFeed(currentUser && currentUser.uid)
-	const { users } = useRecruiterFeed("2zGkzfAEJryWkoexYiTA")
-	React.useEffect(() => console.log("Jobs", jobs), [jobs])
-	React.useEffect(() => console.log("Users", users), [users])
-
-	const [isLoading, setIsLoading] = React.useState(false)
-
-	React.useEffect(() => {
-		setIsLoading(!user)
-		if (user) {
-			setName(user.name)
-			setGender(user.gender)
-			setPhone(user.phone)
-			setDOB(user.dob)
-			if (user.skills) {
-				dispatchSkill(clearSkills())
-				Object.keys(user.skills).forEach(s => {
-					dispatchSkill(addSkill(s, user.skills[s]))
-				})
-			}
-		}
-	}, [setIsLoading, user])
-
-	const formData = { name, gender, phone, dob }
-
-	function getUpdatedData() {
-		let data = {}
-		Object.keys(formData).forEach(d => {
-			if (formData[d]) data[d] = formData[d]
-		})
-		data["skills"] = {}
-		skill.forEach(s => {
-			if (skillSet.includes(s.title) && s.rating !== 0)
-				data["skills"][s.title] = s.rating
-		})
-		return data
-	}
-
-	async function save() {
-		try {
-			await updateUser(getUpdatedData())
-			enqueueSnackbar("Saved!", { variant: "success" })
-		} catch (err) {
-			console.error(err)
-			enqueueSnackbar(err.message || err, { variant: "error" })
-		}
-	}
-
-	return (
+	const [open, setOpen] = React.useState(false)
+	return currentUser === null ? (
+		<Redirect to="/login" />
+	) : currentUser === undefined ? (
+		<CircularProgress />
+	) : (
 		<div className="Profile">
 			<Card>
 				<Box px={4} py={2}>
-					{isLoading || currentUser === 0 ? (
-						<CircularProgress color="secondary" />
-					) : !currentUser ? (
-						<Redirect to="/login" />
-					) : (
-						<form
-							onSubmit={e => {
-								e.preventDefault()
-								save()
-							}}
-						>
-							<Grid container direction="column" spacing={2}>
-								<Grid item>
-									<Grid item>
-										<h1>Profile</h1>
-									</Grid>
-									<Grid container direction="row" spacing={1}>
-										<Grid item>
-											<TextField
-												label="Name"
-												value={name}
-												onChange={e => {
-													setName(e.target.value)
-												}}
-											/>
-										</Grid>
-										<Grid item>
-											<TextField
-												disabled
-												label="E-mail Address"
-												value={currentUser && currentUser.email}
-											/>
-										</Grid>
-									</Grid>
-								</Grid>
-
-								<Grid item>
-									<TextField
-										label="Phone"
-										value={phone}
-										onChange={e => {
-											setPhone(e.target.value)
-										}}
-									/>
-								</Grid>
-								<Grid item>
-									<FormControl>
-										<FormLabel>Gender</FormLabel>
-										<RadioGroup
-											value={gender}
-											onChange={e => setGender(e.target.value)}
-										>
-											<Grid container direction="row" spacing={1}>
-												<Grid item>
-													<FormControlLabel
-														value="male"
-														control={<Radio />}
-														label="Male"
-													/>
-												</Grid>
-												<Grid item>
-													<FormControlLabel
-														value="female"
-														control={<Radio />}
-														label="Female"
-													/>
-												</Grid>
-												<Grid item>
-													<FormControlLabel
-														value="other"
-														control={<Radio />}
-														label="Other"
-													/>
-												</Grid>
-											</Grid>
-										</RadioGroup>
-									</FormControl>
-								</Grid>
-								<Grid item>
-									<TextField
-										type="date"
-										label="DOB"
-										value={dob}
-										InputLabelProps={{
-											shrink: true,
-										}}
-										onChange={e => {
-											setDOB(e.target.value)
-										}}
-									/>
-								</Grid>
-								<Grid item>
-									<SkillSelector skill={skill} dispatch={dispatchSkill} />
-								</Grid>
-								<Grid item>
-									<Grid container direction="row" spacing={1}>
-										<Grid item>
-											<Button type="submit" variant="contained" color="primary">
-												Save
-											</Button>
-										</Grid>
-										<Grid item>
-											<Button
-												variant="outlined"
-												color="secondary"
-												onClick={async () => {
-													try {
-														await Auth.signOut()
-														enqueueSnackbar("Logged out")
-													} catch (error) {
-														enqueueSnackbar(error.message, { variant: "error" })
-													}
-												}}
-											>
-												Log Out
-											</Button>
-										</Grid>
-									</Grid>
-								</Grid>
-							</Grid>
-						</form>
-					)}
+					<Grid container justify="space-between">
+						<Grid item>
+							{user && user.name}
+							{currentUser && currentUser.email}
+						</Grid>
+					</Grid>
 				</Box>
+				<Fab
+					className={classes.fab}
+					color="primary"
+					onClick={() => setOpen(true)}
+				>
+					<Edit />
+				</Fab>
 			</Card>
+			<Box my={2}>
+				<Button
+					variant="outlined"
+					color="secondary"
+					onClick={async () => {
+						try {
+							await Auth.signOut()
+							enqueueSnackbar("Logged out")
+						} catch (error) {
+							enqueueSnackbar(error.message, {
+								variant: "error",
+							})
+						}
+					}}
+				>
+					Log Out
+				</Button>
+			</Box>
+			<Dialog open={open} onClose={() => setOpen(!open)}>
+				<EditProfile />
+			</Dialog>
 		</div>
 	)
 })

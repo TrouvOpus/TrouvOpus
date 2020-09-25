@@ -19,8 +19,10 @@ function getCompatibility(
 			ratios[i] = x[i] / y[i]
 			if (ratios[i] >= 1) ratios[i] = 1
 		})
-	const sum = Object.values(ratios).reduce((a, b) => a + b)
-	const ysum = Object.values(y).reduce((a, b) => a + b)
+	let sum = 0.0
+	Object.keys(ratios).forEach(i => (sum += ratios[i]))
+	let ysum = 0.0
+	Object.keys(y).forEach(i => (ysum += y[i]))
 	return sum / ysum
 }
 

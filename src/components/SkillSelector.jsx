@@ -46,66 +46,79 @@ export function clearSkills() {
 	return { type: "CLEAR" }
 }
 
-export default ({ skill, dispatch }) => {
+export default ({ skills, dispatch }) => {
 	function filterSkill() {
-		let chosenSkill = skill.map(s => s.title)
+		let chosenSkill = skills.map(s => s.title)
 		return skillSet.filter(s => chosenSkill.indexOf(s) === -1)
 	}
 
 	return (
-		<div>
-			{skill.map(s => (
+		<Box p={2}>
+			{skills.map(s => (
 				<Grid item key={s.id}>
 					<Grid container direction="row" spacing={3}>
 						<Grid item>
-							<Autocomplete
-								disableClearable
-								options={filterSkill()}
-								getOptionSelected={o => o || null}
-								style={{ width: 200 }}
-								renderInput={skills => (
-									<TextField {...skills} label="Skill set" />
-								)}
-								value={s.title}
-								onChange={(event, newValue) =>
-									dispatch(editSkill(s.id, "title", newValue))
-								}
-							/>
+							{dispatch ? (
+								<Autocomplete
+									disableClearable
+									options={filterSkill()}
+									getOptionSelected={o => o || null}
+									style={{ width: 200 }}
+									renderInput={skills => (
+										<TextField {...skills} label="Skill set" />
+									)}
+									value={s.title}
+									onChange={(event, newValue) =>
+										dispatch(editSkill(s.id, "title", newValue))
+									}
+								/>
+							) : (
+								s.title
+							)}
 						</Grid>
 						<Grid item>
-							<Box p={3} borderColor="transparent">
+							<Box p={dispatch ? 3 : 0}>
 								<Rating
 									name={s.title}
 									value={s.rating}
-									onChange={(event, newValue) => {
-										dispatch(editSkill(s.id, "rating", newValue))
-									}}
+									readOnly={!dispatch}
+									onChange={
+										dispatch
+											? (event, newValue) => {
+													dispatch(editSkill(s.id, "rating", newValue))
+											  }
+											: null
+									}
 									precision={0.5}
 								/>
 							</Box>
 						</Grid>
-						<Grid item>
-							<Box p={1} borderColor="transparent">
-								<IconButton
-									aria-label="delete"
-									onClick={() => dispatch(removeSkill(s.id))}
-								>
-									<Delete />
-								</IconButton>
-							</Box>
-						</Grid>
+						{dispatch ? (
+							<Grid item>
+								<Box p={1} borderColor="transparent">
+									<IconButton
+										aria-label="delete"
+										onClick={() => dispatch(removeSkill(s.id))}
+									>
+										<Delete />
+									</IconButton>
+								</Box>
+							</Grid>
+						) : null}
 					</Grid>
 				</Grid>
 			))}
-			<Button
-				color="primary"
-				expand="block"
-				startIcon={<Add />}
-				onClick={() => dispatch(addSkill())}
-				disabled={filterSkill().length === 0}
-			>
-				Add skill
-			</Button>
-		</div>
+			{dispatch ? (
+				<Button
+					color="primary"
+					expand="block"
+					startIcon={<Add />}
+					onClick={() => dispatch(addSkill())}
+					disabled={filterSkill().length === 0}
+				>
+					Add skill
+				</Button>
+			) : null}
+		</Box>
 	)
 }

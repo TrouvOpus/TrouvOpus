@@ -23,7 +23,6 @@ export function useUser(
 } {
 	const { Firestore } = React.useContext(FirebaseContext)
 	const [user, setUser] = React.useState<User>(null)
-	const [exists, setExists] = React.useState<boolean>(false)
 
 	/**
 	 * To get the user's data from the Cloud Firestore
@@ -36,7 +35,6 @@ export function useUser(
 				return
 			}
 			let doc = await Firestore.collection("users").doc(uid).get()
-			setExists(doc.exists)
 			u = doc.data()
 			setUser(u)
 		} catch (err) {
@@ -53,12 +51,12 @@ export function useUser(
 			if (!uid) {
 				return
 			}
-			await getUser()
-			if (!exists) await Firestore.collection("users").doc(uid).set({})
+			const u = await Firestore.collection("users").doc(uid).get()
+			if (!u.exists) await Firestore.collection("users").doc(uid).set({})
 		} catch (err) {
 			console.error(err)
 		}
-	}, [getUser, exists, Firestore, uid])
+	}, [Firestore, uid])
 
 	/**
 	 * To update a user's data in the Cloud Firestore
