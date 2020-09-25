@@ -11,10 +11,7 @@ import {
 	Radio,
 	RadioGroup,
 	CircularProgress,
-	Dialog,
-	Fab,
 } from "@material-ui/core"
-import { Edit } from "@material-ui/icons"
 import { withSnackbar } from "notistack"
 import { Redirect } from "react-router-dom"
 import FirebaseContext from "../contexts/FirebaseContext"
@@ -31,20 +28,11 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 
 	const { user, updateUser } = useUser(currentUser && currentUser.uid, true)
 
-	const [open, setOpen] = React.useState(false)
 	const [name, setName] = React.useState()
 	const [phone, setPhone] = React.useState()
 	const [gender, setGender] = React.useState("male")
 	const [dob, setDOB] = React.useState()
 	const [skill, dispatchSkill] = React.useReducer(skillReducer, [])
-
-	const handleClickOpen = () => {
-		setOpen(true)
-	}
-
-	const handleClose = () => {
-		setOpen(false)
-	}
 
 	const { Auth } = React.useContext(FirebaseContext)
 
@@ -99,27 +87,6 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 	return (
 		<div className="Profile">
 			<Card>
-				<Box px={4} py={2}>
-					<Grid container justify="space-between">
-						<Grid item>
-							<h1>{name}</h1>
-						</Grid>
-						<Grid item>
-							<Fab onClick={handleClickOpen} color="primary">
-								<Edit />
-							</Fab>
-						</Grid>
-					</Grid>
-
-					<Grid container spacing={2}>
-						<Grid container direction="row" spacing={1}>
-							<Grid item>{currentUser && currentUser.email}</Grid>
-							<Grid item>{phone}</Grid>
-						</Grid>
-					</Grid>
-				</Box>
-			</Card>
-			<Dialog open={open} onClose={handleClose}>
 				<Box px={4} py={2}>
 					{isLoading || currentUser === 0 ? (
 						<CircularProgress color="secondary" />
@@ -231,9 +198,7 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 														await Auth.signOut()
 														enqueueSnackbar("Logged out")
 													} catch (error) {
-														enqueueSnackbar(error.message, {
-															variant: "error",
-														})
+														enqueueSnackbar(error.message, { variant: "error" })
 													}
 												}}
 											>
@@ -246,7 +211,7 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 						</form>
 					)}
 				</Box>
-			</Dialog>
+			</Card>
 		</div>
 	)
 })
