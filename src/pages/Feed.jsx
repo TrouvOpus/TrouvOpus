@@ -16,13 +16,15 @@ export default () => {
 	) : (
 		<div className="Feed Page">
 			<Grid container spacing={2}>
-				{Object.keys(jobs).map(j => {
-					return (
-						<Grid item>
-							<FeedCard job={jobs[j]} />
-						</Grid>
-					)
-				})}
+				{Object.keys(jobs)
+					.sort((a, b) => jobs[b].compatibility - jobs[a].compatibility)
+					.map(j => {
+						return (
+							<Grid item key={j}>
+								<FeedCard job={{ ...jobs[j], id: j }} />
+							</Grid>
+						)
+					})}
 			</Grid>
 		</div>
 	)

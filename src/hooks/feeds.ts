@@ -38,7 +38,9 @@ export function useApplicantFeed(id: string) {
 	}>({})
 
 	const getAllJobs = React.useCallback(
-		async function (): Promise<void> {
+		async function (): Promise<{
+			[id: string]: firebase.firestore.DocumentData
+		}> {
 			let j: { [id: string]: firebase.firestore.DocumentData } = {}
 			try {
 				const snap = await Firestore.collection("jobs").get()
@@ -48,33 +50,26 @@ export function useApplicantFeed(id: string) {
 			} catch (error) {
 				console.error(error)
 			}
-			setJobs(j)
+			return j
 		},
 		[Firestore]
 	)
 
 	const getJobCompatibility = React.useCallback(
 		function () {
-			let c = jobs
-			Object.keys(c).forEach(
-				j =>
-					(c[j]["compatibility"] =
-						getCompatibility(user && user.skills, jobs[j].skills) || 0.0)
-			)
-			setJobs(c)
+			getAllJobs().then(jobs => {
+				Object.keys(jobs).forEach(
+					j =>
+						(jobs[j]["compatibility"] =
+							getCompatibility(user && user.skills, jobs[j].skills) || 0.0)
+				)
+				setJobs(jobs)
+			})
 		},
-		[jobs, user]
+		[user, getAllJobs]
 	)
 
-	React.useEffect(() => getJobCompatibility(), [
-		user,
-		jobs,
-		getJobCompatibility,
-	])
-
-	React.useEffect(() => {
-		getAllJobs()
-	}, [getAllJobs])
+	React.useEffect(() => getJobCompatibility(), [user, getJobCompatibility])
 
 	return { jobs }
 }
@@ -83,51 +78,47 @@ export function useApplicantFeed(id: string) {
  * A hook to get all qualified jobs for the given job, along with the compatibility index of each user with respect to the job.
  * @param id The ID of the job whose qualified applicants must be fetched.
  */
+
 export function useRecruiterFeed(id: string) {
 	const { Firestore } = React.useContext(FirestoreContext)
 	const { job } = useJob(id)
-	const [users, setUsers] = React.useState<{
+	const [users, setusers] = React.useState<{
 		[id: string]: firebase.firestore.DocumentData
 	}>({})
 
 	const getAllUsers = React.useCallback(
-		async function (): Promise<void> {
-			let u: { [id: string]: firebase.firestore.DocumentData } = {}
+		async function (): Promise<{
+			[id: string]: firebase.firestore.DocumentData
+		}> {
+			let j: { [id: string]: firebase.firestore.DocumentData } = {}
 			try {
 				const snap = await Firestore.collection("users").get()
 				snap.forEach(doc => {
-					u[doc.id] = doc.data()
+					j[doc.id] = doc.data()
 				})
 			} catch (error) {
 				console.error(error)
 			}
-			setUsers(u)
+			return j
 		},
 		[Firestore]
 	)
 
 	const getJobCompatibility = React.useCallback(
 		function () {
-			let c = users
-			Object.keys(c).forEach(
-				u =>
-					(c[u]["compatibility"] =
-						getCompatibility(users[u].skills, job && job.skills) || 0.0)
-			)
-			setUsers(c)
+			getAllUsers().then(users => {
+				Object.keys(users).forEach(
+					j =>
+						(users[j]["compatibility"] =
+							getCompatibility(job && job.skills, users[j].skills) || 0.0)
+				)
+				setusers(users)
+			})
 		},
-		[job, users]
+		[job, getAllUsers]
 	)
 
-	React.useEffect(() => getJobCompatibility(), [
-		job,
-		users,
-		getJobCompatibility,
-	])
-
-	React.useEffect(() => {
-		getAllUsers()
-	}, [getAllUsers])
+	React.useEffect(() => getJobCompatibility(), [job, getJobCompatibility])
 
 	return { users }
 }
