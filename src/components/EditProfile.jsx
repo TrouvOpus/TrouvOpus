@@ -12,18 +12,18 @@ import {
 	CircularProgress,
 } from "@material-ui/core"
 import { withSnackbar } from "notistack"
-import { useUser, useAuth } from "../hooks"
+import { useUser, useAuth, useMetadata } from "../hooks"
 import SkillSelector, {
 	skillReducer,
-	skillSet,
 	clearSkills,
 	addSkill,
 } from "../components/SkillSelector"
 
-export default withSnackbar(({ enqueueSnackbar }) => {
+export default withSnackbar(({ enqueueSnackbar, onSave }) => {
 	const { currentUser } = useAuth()
 
 	const { user, updateUser } = useUser(currentUser && currentUser.uid, true)
+	const skillSet = useMetadata("skillSet")
 
 	const [name, setName] = React.useState()
 	const [phone, setPhone] = React.useState()
@@ -58,19 +58,28 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 		})
 		data["skills"] = {}
 		skill.forEach(s => {
-			if (skillSet.includes(s.title) && s.rating !== 0)
+			if (
+				skillSet &&
+				skillSet.options &&
+				skillSet.options.includes(s.title) &&
+				s.rating !== 0
+			)
 				data["skills"][s.title] = s.rating
 		})
 		return data
 	}
 
 	async function save() {
+		setIsLoading(true)
 		try {
 			await updateUser(getUpdatedData())
+			onSave()
 			enqueueSnackbar("Saved!", { variant: "success" })
 		} catch (err) {
 			console.error(err)
 			enqueueSnackbar(err.message || err, { variant: "error" })
+		} finally {
+			setIsLoading(false)
 		}
 	}
 

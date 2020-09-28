@@ -10,12 +10,14 @@ import {
 	makeStyles,
 	useTheme,
 	CircularProgress,
+	Typography,
 } from "@material-ui/core"
 import { Edit } from "@material-ui/icons"
 import { useAuth, useUser } from "../hooks"
 import EditProfile from "../components/EditProfile"
 import { withSnackbar } from "notistack"
 import FirebaseContext from "../contexts/FirebaseContext"
+import SkillSelector from "../components/SkillSelector"
 
 const useStyles = makeStyles(theme => ({
 	fab: {
@@ -31,6 +33,14 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 	const theme = useTheme()
 	const classes = useStyles(theme)
 
+	function getSkills() {
+		let sk = []
+		Object.keys((user && user.skills) || {}).forEach(i =>
+			sk.push({ id: Math.random(), title: i, rating: user.skills[i] })
+		)
+		return sk
+	}
+
 	const [open, setOpen] = React.useState(false)
 	return currentUser === null ? (
 		<Redirect to="/login" />
@@ -42,14 +52,17 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 				<Box px={4} py={2}>
 					<Grid container justify="space-between">
 						<Grid item>
-							{user && user.name}
+							<Typography variant="h4" component="h4">
+								{user && user.name}
+							</Typography>
 							{currentUser && currentUser.email}
+							<SkillSelector skills={getSkills()} />
 						</Grid>
 					</Grid>
 				</Box>
 				<Fab
 					className={classes.fab}
-					color="primary"
+					color="secondary"
 					onClick={() => setOpen(true)}
 				>
 					<Edit />
@@ -74,7 +87,7 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 				</Button>
 			</Box>
 			<Dialog open={open} onClose={() => setOpen(!open)}>
-				<EditProfile />
+				<EditProfile onSave={() => setOpen(false)} />
 			</Dialog>
 		</div>
 	)

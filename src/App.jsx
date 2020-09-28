@@ -6,9 +6,9 @@ import {
 	CssBaseline,
 	Container,
 	makeStyles,
-	// useMediaQuery,
+	useMediaQuery,
 } from "@material-ui/core"
-import { blueGrey, amber } from "@material-ui/core/colors"
+import { green, amber } from "@material-ui/core/colors"
 import { SnackbarProvider } from "notistack"
 
 import Routes from "./Routes"
@@ -23,12 +23,12 @@ const useStyles = makeStyles({
 })
 
 export default _ => {
-	// const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)")
+	const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)")
 	const theme = createMuiTheme({
 		palette: {
-			// type: prefersDarkMode ? "dark" : "light",
+			type: prefersDarkMode ? "dark" : "light",
 			primary: {
-				main: blueGrey[700],
+				main: green[500],
 				contrastText: "#fff",
 			},
 			secondary: {

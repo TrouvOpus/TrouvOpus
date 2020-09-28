@@ -1,20 +1,30 @@
 import React from "react"
 import {
+	Box,
 	Card,
-	CardActions,
 	CardContent,
+	CardActionArea,
 	Button,
 	Typography,
 	Dialog,
 	IconButton,
 	CircularProgress,
+	DialogTitle,
+	makeStyles,
 } from "@material-ui/core"
 
 import FavoriteIcon from "@material-ui/icons/Favorite"
 import SkillSelector from "../components/SkillSelector"
 
-export default ({ item }) => {
+const useStyles = makeStyles({
+	CircularProgress: {
+		float: "right",
+	},
+})
+
+export default ({ item, type = "job" }) => {
 	const [open, setOpen] = React.useState(false)
+	const classes = useStyles()
 
 	function getSkills() {
 		let sk = []
@@ -25,32 +35,39 @@ export default ({ item }) => {
 	}
 
 	return (
-		<Card>
-			{item && item.compatibility < 0 ? (
-				<CircularProgress />
-			) : (
-				<>
+		item &&
+		item.compatibility >= 0 && (
+			<Box m={2}>
+				<Card>
 					<CardContent>
-						<Typography color="textSecondary" gutterBottom>
-							{~~(item && item.compatibility * 100) + "% match"}
+						<Typography variant="h6" component="h6">
+							{type === "job" && item.title}
 						</Typography>
-						<SkillSelector skills={getSkills()} />
+						<CircularProgress
+							className={classes.CircularProgress}
+							value={item && item.compatibility * 100}
+							variant="static"
+						/>
+						<Typography color="textSecondary" gutterBottom>
+							{~~(item.compatibility * 100) + "% match"}
+						</Typography>
+						<SkillSelector skills={getSkills().slice(0, 3)} />
 					</CardContent>
-					<CardActions>
+					<CardActionArea>
 						<IconButton>
 							<FavoriteIcon />
 						</IconButton>
 						<Button color="primary" onClick={() => setOpen(true)}>
 							More Details
 						</Button>
-						<Dialog
-							open={open}
-							keepMounted
-							onClose={() => setOpen(false)}
-						></Dialog>
-					</CardActions>
-				</>
-			)}
-		</Card>
+						<Dialog open={open} keepMounted onClose={() => setOpen(false)}>
+							<DialogTitle>
+								This dialog will soon have information in it.
+							</DialogTitle>
+						</Dialog>
+					</CardActionArea>
+				</Card>
+			</Box>
+		)
 	)
 }
