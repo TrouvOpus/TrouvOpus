@@ -1,6 +1,13 @@
 import React from "react"
-import { Box, Grid, Button, TextField, IconButton } from "@material-ui/core"
-import { Autocomplete, Rating } from "@material-ui/lab"
+import {
+	Box,
+	Grid,
+	Button,
+	Slider,
+	TextField,
+	IconButton,
+} from "@material-ui/core"
+import { Autocomplete } from "@material-ui/lab"
 import { Add, Delete } from "@material-ui/icons"
 import { useMetadata } from "../hooks"
 
@@ -45,8 +52,6 @@ export function clearSkills() {
 	return { type: "CLEAR" }
 }
 
-const SCALE = 10.0 / 5.0 // dataScale / uiScale
-
 export default ({ skills, dispatch }) => {
 	const skillSet = useMetadata("skillSet")
 
@@ -61,65 +66,63 @@ export default ({ skills, dispatch }) => {
 	}
 
 	return (
-		<Box p={2}>
-			{(dispatch ? skills : skills.sort((a, b) => b.rating - a.rating)).map(
-				s => (
-					<Grid item key={s.id}>
-						<Grid container direction="row" spacing={3}>
-							<Grid item>
-								{dispatch ? (
-									<Autocomplete
-										disableClearable
-										options={filterSkill()}
-										getOptionSelected={o => o || null}
-										style={{ width: 200 }}
-										renderInput={skills => (
-											<TextField {...skills} label="Skill set" />
-										)}
-										value={s.title}
-										onChange={(event, newValue) =>
-											dispatch(editSkill(s.id, "title", newValue))
-										}
-									/>
-								) : (
-									s.title
-								)}
-							</Grid>
-							<Grid item>
-								<Box p={dispatch ? 3 : 0}>
-									<Rating
+		<Box p={2} width="100%">
+			<Grid container direction="row" spacing={3}>
+				{(dispatch ? skills : skills.sort((a, b) => b.rating - a.rating)).map(
+					s => (
+						<Grid item key={s.id}>
+							<Grid container direction="row" spacing={3}>
+								<Grid item>
+									{dispatch ? (
+										<Autocomplete
+											disableClearable
+											options={filterSkill()}
+											getOptionSelected={o => o || null}
+											style={{ width: 200 }}
+											renderInput={skills => (
+												<TextField {...skills} label="Skill set" />
+											)}
+											value={s.title}
+											onChange={(event, newValue) =>
+												dispatch(editSkill(s.id, "title", newValue))
+											}
+										/>
+									) : (
+										<Box width={150}>{s.title}</Box>
+									)}
+									<Slider
 										name={s.title}
-										value={s.rating / SCALE}
-										readOnly={!dispatch}
+										value={s.rating}
+										min={0}
+										max={10.0}
 										onChange={
 											dispatch
 												? (event, newValue) => {
-														dispatch(
-															editSkill(s.id, "rating", newValue * SCALE)
-														)
+														dispatch(editSkill(s.id, "rating", newValue))
 												  }
 												: null
 										}
 										precision={0.5}
+										valueLabelDisplay="auto"
 									/>
-								</Box>
-							</Grid>
-							{dispatch ? (
-								<Grid item>
-									<Box p={1} borderColor="transparent">
-										<IconButton
-											aria-label="delete"
-											onClick={() => dispatch(removeSkill(s.id))}
-										>
-											<Delete />
-										</IconButton>
-									</Box>
 								</Grid>
-							) : null}
+								{dispatch ? (
+									<Grid item>
+										<Box p={1} borderColor="transparent">
+											<IconButton
+												aria-label="delete"
+												onClick={() => dispatch(removeSkill(s.id))}
+											>
+												<Delete />
+											</IconButton>
+										</Box>
+									</Grid>
+								) : null}
+							</Grid>
 						</Grid>
-					</Grid>
-				)
-			)}
+					)
+				)}
+			</Grid>
 			{dispatch ? (
 				<Button
 					color="primary"

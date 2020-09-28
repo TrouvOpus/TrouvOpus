@@ -50,15 +50,11 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 		<div className="Profile">
 			<Card>
 				<Box px={4} py={2}>
-					<Grid container justify="space-between">
-						<Grid item>
-							<Typography variant="h4" component="h4">
-								{user && user.name}
-							</Typography>
-							{currentUser && currentUser.email}
-							<SkillSelector skills={getSkills()} />
-						</Grid>
-					</Grid>
+					<Typography variant="h4" component="h4">
+						{user && user.name}
+					</Typography>
+					{currentUser && currentUser.email}
+					<SkillSelector skills={getSkills()} />
 				</Box>
 				<Fab
 					className={classes.fab}

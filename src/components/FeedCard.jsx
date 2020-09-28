@@ -22,7 +22,7 @@ const useStyles = makeStyles({
 	},
 })
 
-export default ({ item, type = "job" }) => {
+export default ({ item, onLike = () => {}, liked = false, type = "job" }) => {
 	const [open, setOpen] = React.useState(false)
 	const classes = useStyles()
 
@@ -54,7 +54,10 @@ export default ({ item, type = "job" }) => {
 						<SkillSelector skills={getSkills().slice(0, 3)} />
 					</CardContent>
 					<CardActionArea>
-						<IconButton>
+						<IconButton
+							onClick={onLike}
+							color={liked ? "secondary" : "default"}
+						>
 							<FavoriteIcon />
 						</IconButton>
 						<Button color="primary" onClick={() => setOpen(true)}>
