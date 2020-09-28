@@ -12,7 +12,7 @@ import {
 	CircularProgress,
 } from "@material-ui/core"
 import { withSnackbar } from "notistack"
-import { useUser, useAuth, useApplicantFeed, useRecruiterFeed } from "../hooks"
+import { useUser, useAuth } from "../hooks"
 import SkillSelector, {
 	skillReducer,
 	skillSet,
@@ -30,11 +30,6 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 	const [gender, setGender] = React.useState("male")
 	const [dob, setDOB] = React.useState()
 	const [skill, dispatchSkill] = React.useReducer(skillReducer, [])
-
-	const { jobs } = useApplicantFeed(currentUser && currentUser.uid)
-	const { users } = useRecruiterFeed("2zGkzfAEJryWkoexYiTA")
-	React.useEffect(() => console.log("Jobs", jobs), [jobs])
-	React.useEffect(() => console.log("Users", users), [users])
 
 	const [isLoading, setIsLoading] = React.useState(false)
 

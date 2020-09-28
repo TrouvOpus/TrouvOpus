@@ -46,6 +46,8 @@ export function clearSkills() {
 	return { type: "CLEAR" }
 }
 
+const SCALE = 10.0 / 5.0 // dataScale / uiScale
+
 export default ({ skills, dispatch }) => {
 	function filterSkill() {
 		let chosenSkill = skills.map(s => s.title)
@@ -80,12 +82,12 @@ export default ({ skills, dispatch }) => {
 							<Box p={dispatch ? 3 : 0}>
 								<Rating
 									name={s.title}
-									value={s.rating}
+									value={s.rating / SCALE}
 									readOnly={!dispatch}
 									onChange={
 										dispatch
 											? (event, newValue) => {
-													dispatch(editSkill(s.id, "rating", newValue))
+													dispatch(editSkill(s.id, "rating", newValue * SCALE))
 											  }
 											: null
 									}

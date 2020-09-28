@@ -13,26 +13,26 @@ import {
 import FavoriteIcon from "@material-ui/icons/Favorite"
 import SkillSelector from "../components/SkillSelector"
 
-export default ({ job }) => {
+export default ({ item }) => {
 	const [open, setOpen] = React.useState(false)
 
 	function getSkills() {
 		let sk = []
-		Object.keys((job && job.skills) || {}).forEach(i =>
-			sk.push({ id: Math.random(), title: i, rating: job.skills[i] })
+		Object.keys((item && item.skills) || {}).forEach(i =>
+			sk.push({ id: Math.random(), title: i, rating: item.skills[i] })
 		)
 		return sk
 	}
 
 	return (
 		<Card>
-			{job && job.compatibility < 0 ? (
+			{item && item.compatibility < 0 ? (
 				<CircularProgress />
 			) : (
 				<>
 					<CardContent>
 						<Typography color="textSecondary" gutterBottom>
-							{~~(job && job.compatibility * 100) + "% match"}
+							{~~(item && item.compatibility * 100) + "% match"}
 						</Typography>
 						<SkillSelector skills={getSkills()} />
 					</CardContent>
