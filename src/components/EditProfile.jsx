@@ -33,6 +33,7 @@ export default withSnackbar(({ enqueueSnackbar, onSave }) => {
 	const [active, setActive] = React.useState(false)
 	const [name, setName] = React.useState()
 	const [phone, setPhone] = React.useState()
+	const [objective, setObjective] = React.useState()
 	const [gender, setGender] = React.useState("male")
 	const [dob, setDOB] = React.useState()
 	const [skill, dispatchSkill] = React.useReducer(skillReducer, [])
@@ -46,6 +47,7 @@ export default withSnackbar(({ enqueueSnackbar, onSave }) => {
 			setName(user.name)
 			setGender(user.gender)
 			setPhone(user.phone)
+			setObjective(user.objective)
 			setDOB(user.dob)
 			if (user.skills) {
 				dispatchSkill(clearSkills())
@@ -56,7 +58,7 @@ export default withSnackbar(({ enqueueSnackbar, onSave }) => {
 		}
 	}, [setIsLoading, user])
 
-	const formData = { active, name, gender, phone, dob }
+	const formData = { active, name, gender, phone, objective, dob }
 
 	function getUpdatedData() {
 		let data = {}
@@ -181,6 +183,16 @@ export default withSnackbar(({ enqueueSnackbar, onSave }) => {
 										</Grid>
 									</RadioGroup>
 								</FormControl>
+							</Grid>
+							<Grid item>
+								<TextField
+									id="standard-textarea"
+									label="Objective"
+									fullWidth
+									value={objective}
+									multiline
+									onChange={e => setObjective(e.target.value)}
+								/>
 							</Grid>
 							<Grid item>
 								<TextField

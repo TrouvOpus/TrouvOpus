@@ -91,7 +91,7 @@ export default () => {
 	return (
 		<div className="Ads Page">
 			<Card>
-				<CardHeader title="MyAds" />
+				<CardHeader title="My Ads" />
 				<CardContent>
 					<List>
 						{ads.map(a => (

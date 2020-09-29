@@ -10,8 +10,11 @@ import {
 	useTheme,
 	CircularProgress,
 	Typography,
+	Chip,
+	Grid,
+	useMediaQuery,
 } from "@material-ui/core"
-import { Edit } from "@material-ui/icons"
+import { Edit, AccountCircle, PhoneIphone } from "@material-ui/icons"
 import { useAuth, useMatchable } from "../hooks"
 import { withSnackbar } from "notistack"
 import FirebaseContext from "../contexts/FirebaseContext"
@@ -26,6 +29,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export default withSnackbar(({ enqueueSnackbar }) => {
+	const landscape = useMediaQuery("(orientation:landscape)")
 	const { currentUser } = useAuth()
 	const { Auth } = React.useContext(FirebaseContext)
 	const { item: user } = useMatchable(
@@ -44,7 +48,7 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 		)
 		return sk
 	}
-
+	console.log(landscape)
 	const [open, setOpen] = React.useState(false)
 	return currentUser === null ? (
 		<Redirect to="/login" />
@@ -56,13 +60,45 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 				My Ads
 			</Button>
 			<Card>
-				<Box px={4} py={2}>
-					<Typography variant="h4" component="h4">
-						{user && user.name}
-					</Typography>
-					{currentUser && currentUser.email}
-					<SkillSelector skills={getSkills()} />
-				</Box>
+				<Grid container direction={landscape ? "row" : "column"}>
+					<Grid item xs={landscape ? "6" : "0"}>
+						<Box px={4} py={2}>
+							<Typography variant="h4" component="h4">
+								{user && user.name}
+							</Typography>
+							<Grid container direction="row" spacing={2}>
+								<Grid item>
+									<Chip
+										icon={<AccountCircle />}
+										label={currentUser && currentUser.email}
+										variant="outlined"
+									/>
+								</Grid>
+								<Grid item>
+									<Chip
+										icon={<PhoneIphone />}
+										label={user && user.phone}
+										variant="outlined"
+									/>
+								</Grid>
+							</Grid>
+							<Box py={3}>
+								<Typography py={2} display="flex">
+									{user && user.objective}
+								</Typography>
+							</Box>
+						</Box>
+					</Grid>
+					<Grid item xs={landscape ? "6" : "0"}>
+						<Box px={4} py={2}>
+							<Typography variant="h5" component="h5">
+								Skill set:
+							</Typography>
+							<SkillSelector skills={getSkills()} />
+						</Box>
+					</Grid>
+				</Grid>
+
 				<Fab
 					className={classes.fab}
 					color="secondary"

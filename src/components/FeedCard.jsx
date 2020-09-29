@@ -33,7 +33,15 @@ export default ({ item, onLike = () => {}, liked = false, type = "job" }) => {
 			<Box m={2}>
 				<Card>
 					<CardContent>
-						<Grid container direction="row" spacing={2}>
+						<Grid container direction="row" spacing={2} justify="space-between">
+							<Grid item>
+								<Typography variant="h6" component="h6">
+									{type === "job" && item.title}
+								</Typography>
+								<Typography color="textSecondary" gutterBottom>
+									{~~(item.compatibility * 100) + "% match"}
+								</Typography>
+							</Grid>
 							<Grid item>
 								<Progress
 									value={item && item.compatibility * 100}
@@ -45,14 +53,6 @@ export default ({ item, onLike = () => {}, liked = false, type = "job" }) => {
 											],
 									}}
 								/>
-							</Grid>
-							<Grid item>
-								<Typography variant="h6" component="h6">
-									{type === "job" && item.title}
-								</Typography>
-								<Typography color="textSecondary" gutterBottom>
-									{~~(item.compatibility * 100) + "% match"}
-								</Typography>
 							</Grid>
 						</Grid>
 						<SkillSelector skills={getSkills()} />

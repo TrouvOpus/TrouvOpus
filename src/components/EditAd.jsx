@@ -116,6 +116,7 @@ export default withSnackbar(({ enqueueSnackbar, open, onClose, uid }) => {
 								<TextField
 									label="Title"
 									value={title}
+									fullWidth
 									onChange={e => setTitle(e.target.value)}
 								/>
 							</Grid>
@@ -124,6 +125,7 @@ export default withSnackbar(({ enqueueSnackbar, open, onClose, uid }) => {
 									label="Description"
 									value={description}
 									multiline
+									fullWidth
 									onChange={e => setDescription(e.target.value)}
 								/>
 							</Grid>
