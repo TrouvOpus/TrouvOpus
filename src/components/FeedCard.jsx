@@ -4,27 +4,20 @@ import {
 	Card,
 	CardContent,
 	CardActionArea,
-	Button,
+	Collapse,
 	Typography,
-	Dialog,
 	IconButton,
-	CircularProgress,
-	DialogTitle,
-	makeStyles,
+	useTheme,
+	Grid,
 } from "@material-ui/core"
 
-import FavoriteIcon from "@material-ui/icons/Favorite"
+import { Favorite, ExpandMore } from "@material-ui/icons"
 import SkillSelector from "../components/SkillSelector"
-
-const useStyles = makeStyles({
-	CircularProgress: {
-		float: "right",
-	},
-})
+import Progress from "../components/Progress"
 
 export default ({ item, onLike = () => {}, liked = false, type = "job" }) => {
 	const [open, setOpen] = React.useState(false)
-	const classes = useStyles()
+	const theme = useTheme()
 
 	function getSkills() {
 		let sk = []
@@ -40,34 +33,43 @@ export default ({ item, onLike = () => {}, liked = false, type = "job" }) => {
 			<Box m={2}>
 				<Card>
 					<CardContent>
-						<Typography variant="h6" component="h6">
-							{type === "job" && item.title}
-						</Typography>
-						<CircularProgress
-							className={classes.CircularProgress}
-							value={item && item.compatibility * 100}
-							variant="static"
-						/>
-						<Typography color="textSecondary" gutterBottom>
-							{~~(item.compatibility * 100) + "% match"}
-						</Typography>
-						<SkillSelector skills={getSkills().slice(0, 3)} />
+						<Grid container direction="row" spacing={2}>
+							<Grid item>
+								<Progress
+									value={item && item.compatibility * 100}
+									variant="static"
+									style={{
+										bottom:
+											theme.palette.grey[
+												theme.palette.type === "light" ? 200 : 700
+											],
+									}}
+								/>
+							</Grid>
+							<Grid item>
+								<Typography variant="h6" component="h6">
+									{type === "job" && item.title}
+								</Typography>
+								<Typography color="textSecondary" gutterBottom>
+									{~~(item.compatibility * 100) + "% match"}
+								</Typography>
+							</Grid>
+						</Grid>
+						<SkillSelector skills={getSkills()} />
 					</CardContent>
+					<Collapse in={open}>
+						<CardContent>Details</CardContent>
+					</Collapse>
 					<CardActionArea>
 						<IconButton
 							onClick={onLike}
 							color={liked ? "secondary" : "default"}
 						>
-							<FavoriteIcon />
+							<Favorite />
 						</IconButton>
-						<Button color="primary" onClick={() => setOpen(true)}>
-							More Details
-						</Button>
-						<Dialog open={open} keepMounted onClose={() => setOpen(false)}>
-							<DialogTitle>
-								This dialog will soon have information in it.
-							</DialogTitle>
-						</Dialog>
+						<IconButton onClick={() => setOpen(!open)}>
+							<ExpandMore />
+						</IconButton>
 					</CardActionArea>
 				</Card>
 			</Box>

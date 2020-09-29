@@ -8,7 +8,7 @@ import {
 	makeStyles,
 	useMediaQuery,
 } from "@material-ui/core"
-import { green, amber } from "@material-ui/core/colors"
+import { cyan, amber } from "@material-ui/core/colors"
 import { SnackbarProvider } from "notistack"
 
 import Routes from "./Routes"
@@ -28,7 +28,7 @@ export default _ => {
 		palette: {
 			type: prefersDarkMode ? "dark" : "light",
 			primary: {
-				main: green[500],
+				main: cyan[500],
 				contrastText: "#fff",
 			},
 			secondary: {

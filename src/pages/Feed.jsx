@@ -1,23 +1,14 @@
-import { Box, makeStyles, useMediaQuery } from "@material-ui/core"
 import React from "react"
 import FeedCard from "../components/FeedCard"
 import { Redirect } from "react-router-dom"
 import { CircularProgress } from "@material-ui/core"
+import { Grid } from "@material-ui/core"
 import { useFeed, useAuth, useUser } from "../hooks"
-
-const useStyles = makeStyles({
-	grid: {
-		display: "grid",
-		gridTemplateColumns: ({ landscape }) => (landscape ? "1fr 1fr 1fr" : "1fr"),
-	},
-})
 
 export default () => {
 	const { currentUser } = useAuth()
 	const applicant = useFeed("applicant", currentUser && currentUser.uid)
 	const { user, updateUser } = useUser(currentUser && currentUser.uid, true)
-	const landscape = useMediaQuery("(orientation: landscape)")
-	const classes = useStyles({ landscape })
 
 	async function like(uid) {
 		const likes = (user && user.likes) || []
@@ -33,8 +24,7 @@ export default () => {
 	) : currentUser === undefined ? (
 		<CircularProgress />
 	) : (
-		<Box className={classes.grid}>
-			Applicant
+		<Grid container justifyItems="center" direction="column">
 			{Object.keys(applicant.items)
 				.sort(
 					(a, b) =>
@@ -42,14 +32,16 @@ export default () => {
 				)
 				.map(i => {
 					return (
-						<FeedCard
-							key={i}
-							item={{ ...applicant.items[i], id: i }}
-							liked={user && user.likes && user.likes.includes(i)}
-							onLike={() => like(i)}
-						/>
+						<Grid item xs>
+							<FeedCard
+								key={i}
+								item={{ ...applicant.items[i], id: i }}
+								liked={user && user.likes && user.likes.includes(i)}
+								onLike={() => like(i)}
+							/>
+						</Grid>
 					)
 				})}
-		</Box>
+		</Grid>
 	)
 }
