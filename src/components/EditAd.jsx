@@ -53,7 +53,6 @@ export default withSnackbar(({ enqueueSnackbar, open, onClose, uid }) => {
 	function getUpdatedData() {
 		let data = {}
 		Object.keys(formData).forEach(d => {
-			console.log(d, formData[d])
 			if (formData[d]) data[d] = formData[d]
 		})
 		data["skills"] = {}
@@ -69,32 +68,25 @@ export default withSnackbar(({ enqueueSnackbar, open, onClose, uid }) => {
 		return data
 	}
 
-	async function save() {
+	function save() {
 		setIsLoading(true)
-		try {
-			await updateJob(getUpdatedData())
-			onClose && onClose()
-			enqueueSnackbar("Saved!", { variant: "success" })
-		} catch (err) {
-			console.error(err)
-			enqueueSnackbar(err.message || err, { variant: "error" })
-		} finally {
-			setIsLoading(false)
-		}
+		updateJob(getUpdatedData())
+		enqueueSnackbar("Saved!", { variant: "success" })
+		onClose && onClose()
 	}
 
 	return (
-		<form
-			onSubmit={event => {
-				event.preventDefault()
-				save()
-			}}
+		<Dialog
+			open={open}
+			onClose={onClose}
+			fullScreen={fullScreen}
+			scroll="paper"
 		>
-			<Dialog
-				open={open}
-				onClose={onClose}
-				fullScreen={fullScreen}
-				scroll="paper"
+			<form
+				onSubmit={event => {
+					event.preventDefault()
+					save()
+				}}
 			>
 				<DialogTitle>Edit Job</DialogTitle>
 				<DialogContent dividers>
@@ -135,7 +127,7 @@ export default withSnackbar(({ enqueueSnackbar, open, onClose, uid }) => {
 						Save
 					</Button>
 				</DialogActions>
-			</Dialog>
-		</form>
+			</form>
+		</Dialog>
 	)
 })

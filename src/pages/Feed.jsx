@@ -5,9 +5,9 @@ import { CircularProgress } from "@material-ui/core"
 import { Grid } from "@material-ui/core"
 import { useFeed, useAuth, useMatchable } from "../hooks"
 
-export default () => {
+export default ({ type, uid }) => {
 	const { currentUser } = useAuth()
-	const applicant = useFeed("applicant", currentUser && currentUser.uid)
+	const feed = useFeed(type, uid)
 	const { item: user, updateItem: updateUser } = useMatchable(
 		"user",
 		currentUser && currentUser.uid,
@@ -29,17 +29,16 @@ export default () => {
 		<CircularProgress />
 	) : (
 		<Grid container justifyItems="center" direction="column">
-			{Object.keys(applicant.items)
+			{Object.keys(feed.items)
 				.sort(
-					(a, b) =>
-						applicant.items[b].compatibility - applicant.items[a].compatibility
+					(a, b) => feed.items[b].compatibility - feed.items[a].compatibility
 				)
 				.map(i => {
 					return (
 						<Grid item xs>
 							<FeedCard
 								key={i}
-								item={{ ...applicant.items[i], id: i }}
+								item={{ ...feed.items[i], id: i }}
 								liked={user && user.likes && user.likes.includes(i)}
 								onLike={() => like(i)}
 							/>

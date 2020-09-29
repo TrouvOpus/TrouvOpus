@@ -7,16 +7,22 @@ import Error from "./pages/Error"
 import Profile from "./pages/Profile"
 import Feed from "./pages/Feed"
 import Ads from "./pages/Ads"
+import { useAuth } from "./hooks"
 
-export default () => (
-	<div className="Routes">
-		<Switch>
-			<Route path="/login" component={Login} />
-			<Route path="/profile" component={Profile} />
-			<Route path="/feed" component={Feed} />
-			<Route path="/ads" component={Ads} />
-			<Route exact path="/" component={Home} />
-			<Route component={Error} />
-		</Switch>
-	</div>
-)
+export default () => {
+	const { currentUser } = useAuth()
+	return (
+		<div className="Routes">
+			<Switch>
+				<Route path="/login" component={Login} />
+				<Route path="/profile" component={Profile} />
+				<Route path="/feed">
+					<Feed type="applicant" uid={currentUser && currentUser.uid} />
+				</Route>
+				<Route path="/ads" component={Ads} />
+				<Route exact path="/" component={Home} />
+				<Route component={Error} />
+			</Switch>
+		</div>
+	)
+}

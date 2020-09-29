@@ -50,9 +50,7 @@ export function useMatchable(
 
 	const createItemDoc = React.useCallback(async () => {
 		try {
-			if (!uid) {
-				return
-			}
+			if (!uid) return
 			const i = await Firestore.collection(collection).doc(uid).get()
 			if (!i.exists)
 				await Firestore.collection(collection)
@@ -70,9 +68,7 @@ export function useMatchable(
 
 	async function updateItem(updates: firestore.UpdateData) {
 		try {
-			if (!uid) {
-				return
-			}
+			if (!uid) return
 			await Firestore.collection(collection).doc(uid).update(updates)
 		} catch (err) {
 			console.error(err)

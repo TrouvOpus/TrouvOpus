@@ -23,7 +23,7 @@ const useStyles = makeStyles({
 })
 
 export default _ => {
-	const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)")
+	const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)") && false
 	const theme = createMuiTheme({
 		palette: {
 			type: prefersDarkMode ? "dark" : "light",
