@@ -1,7 +1,6 @@
-import { useUser } from "./useUser"
-import { useJob } from "./useJob"
+import { useMatchable } from "./useMatchable"
 import { useAuth } from "./useAuth"
 import { useFeed } from "./useFeed"
 import { useMetadata } from "./useMetadata"
 
-export { useUser, useJob, useAuth, useFeed, useMetadata }
+export { useMatchable, useAuth, useFeed, useMetadata }

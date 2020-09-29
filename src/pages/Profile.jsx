@@ -12,7 +12,7 @@ import {
 	Typography,
 } from "@material-ui/core"
 import { Edit } from "@material-ui/icons"
-import { useAuth, useUser } from "../hooks"
+import { useAuth, useMatchable } from "../hooks"
 import { withSnackbar } from "notistack"
 import FirebaseContext from "../contexts/FirebaseContext"
 import SkillSelector from "../components/SkillSelector"
@@ -28,7 +28,12 @@ const useStyles = makeStyles(theme => ({
 export default withSnackbar(({ enqueueSnackbar }) => {
 	const { currentUser } = useAuth()
 	const { Auth } = React.useContext(FirebaseContext)
-	const { user } = useUser(currentUser && currentUser.uid, true, true)
+	const { item: user } = useMatchable(
+		"user",
+		currentUser && currentUser.uid,
+		true,
+		true
+	)
 	const theme = useTheme()
 	const classes = useStyles(theme)
 

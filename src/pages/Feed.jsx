@@ -3,12 +3,16 @@ import FeedCard from "../components/FeedCard"
 import { Redirect } from "react-router-dom"
 import { CircularProgress } from "@material-ui/core"
 import { Grid } from "@material-ui/core"
-import { useFeed, useAuth, useUser } from "../hooks"
+import { useFeed, useAuth, useMatchable } from "../hooks"
 
 export default () => {
 	const { currentUser } = useAuth()
 	const applicant = useFeed("applicant", currentUser && currentUser.uid)
-	const { user, updateUser } = useUser(currentUser && currentUser.uid, true)
+	const { item: user, updateItem: updateUser } = useMatchable(
+		"user",
+		currentUser && currentUser.uid,
+		true
+	)
 
 	async function like(uid) {
 		const likes = (user && user.likes) || []

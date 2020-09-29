@@ -1,5 +1,4 @@
 import React from "react"
-import { useJob } from "../hooks"
 import {
 	Grid,
 	Dialog,
@@ -12,7 +11,7 @@ import {
 	useMediaQuery,
 	CircularProgress,
 } from "@material-ui/core"
-import { useMetadata } from "../hooks"
+import { useMetadata, useMatchable } from "../hooks"
 import SkillSelector, {
 	skillReducer,
 	clearSkills,
@@ -24,7 +23,12 @@ export default withSnackbar(({ enqueueSnackbar, open, onClose, uid }) => {
 	const theme = useTheme()
 	const fullScreen = useMediaQuery(theme.breakpoints.down("sm"))
 	const skillSet = useMetadata("skillSet")
-	const { job, updateJob } = useJob(uid, true, true)
+	const { item: job, updateItem: updateJob } = useMatchable(
+		"job",
+		uid,
+		true,
+		true
+	)
 	const [title, setTitle] = React.useState()
 	const [description, setDescription] = React.useState()
 	const [isLoading, setIsLoading] = React.useState(false)

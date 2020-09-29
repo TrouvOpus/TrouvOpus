@@ -1,6 +1,6 @@
 import React from "react"
 import FirestoreContext from "../contexts/FirebaseContext"
-import { useUser, useJob } from "."
+import { useMatchable } from "."
 
 /**
  * To return the compatibility ratios of an object with respect to another object.
@@ -26,8 +26,7 @@ function getCompatibilityRatios(
  */
 export function useFeed(type: "applicant" | "recruiter", id: string) {
 	const { Firestore } = React.useContext(FirestoreContext)
-	const { user } = useUser(id)
-	const { job } = useJob(id)
+	const { item } = useMatchable(type === "applicant" ? "user" : "job", id)
 	const [items, setItems] = React.useState<{
 		[id: string]: firebase.firestore.DocumentData
 	}>({})
@@ -58,8 +57,8 @@ export function useFeed(type: "applicant" | "recruiter", id: string) {
 				Object.keys(items).forEach(i => {
 					const ratios =
 						type === "applicant"
-							? getCompatibilityRatios(user && user.skills, items[i].skills)
-							: getCompatibilityRatios(items[i].skills, job && job.skills)
+							? getCompatibilityRatios(item && item.skills, items[i].skills)
+							: getCompatibilityRatios(items[i].skills, item && item.skills)
 					items[i]["ratios"] = ratios
 					items[i]["compatibility"] =
 						Object.values(ratios).reduce((a, b) => a + b, 0) /
@@ -68,10 +67,10 @@ export function useFeed(type: "applicant" | "recruiter", id: string) {
 				setItems(items)
 			})
 		},
-		[user, job, type, getAllItems]
+		[item, type, getAllItems]
 	)
 
-	React.useEffect(() => getJobCompatibility(), [user, getJobCompatibility])
+	React.useEffect(() => getJobCompatibility(), [item, getJobCompatibility])
 
 	return { items }
 }

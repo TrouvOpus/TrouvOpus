@@ -12,7 +12,7 @@ import {
 	CircularProgress,
 } from "@material-ui/core"
 import { withSnackbar } from "notistack"
-import { useUser, useAuth, useMetadata } from "../hooks"
+import { useMatchable, useAuth, useMetadata } from "../hooks"
 import SkillSelector, {
 	skillReducer,
 	clearSkills,
@@ -22,7 +22,11 @@ import SkillSelector, {
 export default withSnackbar(({ enqueueSnackbar, onSave }) => {
 	const { currentUser } = useAuth()
 
-	const { user, updateUser } = useUser(currentUser && currentUser.uid, true)
+	const { item: user, updateItem: updateUser } = useMatchable(
+		"user",
+		currentUser && currentUser.uid,
+		true
+	)
 	const skillSet = useMetadata("skillSet")
 
 	const [name, setName] = React.useState()
