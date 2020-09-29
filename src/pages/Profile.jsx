@@ -1,9 +1,8 @@
 import React from "react"
-import { Redirect } from "react-router-dom"
+import { Redirect, Link } from "react-router-dom"
 import {
 	Card,
 	Box,
-	Grid,
 	Fab,
 	Dialog,
 	Button,
@@ -14,10 +13,10 @@ import {
 } from "@material-ui/core"
 import { Edit } from "@material-ui/icons"
 import { useAuth, useUser } from "../hooks"
-import EditProfile from "../components/EditProfile"
 import { withSnackbar } from "notistack"
 import FirebaseContext from "../contexts/FirebaseContext"
 import SkillSelector from "../components/SkillSelector"
+import EditProfile from "../components/EditProfile"
 
 const useStyles = makeStyles(theme => ({
 	fab: {
@@ -48,6 +47,9 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 		<CircularProgress />
 	) : (
 		<div className="Profile">
+			<Button component={Link} to="/ads">
+				My Ads
+			</Button>
 			<Card>
 				<Box px={4} py={2}>
 					<Typography variant="h4" component="h4">

@@ -6,6 +6,7 @@ import Login from "./pages/Login"
 import Error from "./pages/Error"
 import Profile from "./pages/Profile"
 import Feed from "./pages/Feed"
+import Ads from "./pages/Ads"
 
 export default () => (
 	<div className="Routes">
@@ -13,6 +14,7 @@ export default () => (
 			<Route path="/login" component={Login} />
 			<Route path="/profile" component={Profile} />
 			<Route path="/feed" component={Feed} />
+			<Route path="/ads" component={Ads} />
 			<Route exact path="/" component={Home} />
 			<Route component={Error} />
 		</Switch>

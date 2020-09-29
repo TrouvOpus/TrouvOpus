@@ -5,10 +5,11 @@ import { firestore } from "firebase"
 export type Job = firestore.DocumentData | undefined | null
 
 /**
- * A hook that handles job data.
- * @param uid The job's unique identification key.
+ * A hook that handles Job data.
+ * @param uid The Job's unique identification key.
  * @param listen A boolean value that determines if the hook should listen for changes in the Firestore.
- * @returns An object with the currently logged in user and a function to set the user.
+ * @param create A boolean value that determines if the Job should be created in the Firestore if it doesn't already exist.
+ * @returns An object with the currently logged in Job and a function to set the Job.
  */
 
 export function useJob(
@@ -22,10 +23,9 @@ export function useJob(
 } {
 	const { Firestore } = React.useContext(FirebaseContext)
 	const [job, setJob] = React.useState<Job>(null)
-	const [exists, setExists] = React.useState(false)
 
 	/**
-	 * To get the job's data from the Cloud Firestore
+	 * To get the Job's data from the Cloud Firestore
 	 */
 
 	const getJob = React.useCallback(async () => {
@@ -35,7 +35,6 @@ export function useJob(
 				return
 			}
 			let doc = await Firestore.collection("jobs").doc(uid).get()
-			setExists(doc.exists)
 			j = doc.data()
 			setJob(j)
 		} catch (err) {
@@ -44,7 +43,7 @@ export function useJob(
 	}, [Firestore, uid])
 
 	/**
-	 * To create the job's document in the Cloud Firestore if it doesn't already exist
+	 * To create the Job's document in the Cloud Firestore if it doesn't already exist
 	 */
 
 	const createJobDoc = React.useCallback(async () => {
@@ -52,15 +51,18 @@ export function useJob(
 			if (!uid) {
 				return
 			}
-			await getJob()
-			if (!exists) await Firestore.collection("jobs").doc(uid).set({})
+			const j = await Firestore.collection("jobs").doc(uid).get()
+			if (!j.exists)
+				await Firestore.collection("jobs")
+					.doc(uid)
+					.set({ createdAt: firestore.Timestamp.now() })
 		} catch (err) {
 			console.error(err)
 		}
-	}, [getJob, exists, Firestore, uid])
+	}, [Firestore, uid])
 
 	/**
-	 * To update a job's data in the Cloud Firestore
+	 * To update a Job's data in the Cloud Firestore
 	 * @param updates
 	 */
 
@@ -76,7 +78,7 @@ export function useJob(
 	}
 
 	/**
-	 * An effect to create a job if it doesn't already exist
+	 * An effect to create a Job if it doesn't already exist
 	 */
 
 	React.useEffect(() => {
@@ -84,13 +86,13 @@ export function useJob(
 	}, [create, createJobDoc, uid])
 
 	/**
-	 * An effect to get the job's data and/or listen for changes.
+	 * An effect to get the Job's data and/or listen for changes.
 	 */
 	React.useEffect(
 		uid
 			? listen
 				? () =>
-						Firestore.collection("users")
+						Firestore.collection("jobs")
 							.doc(uid)
 							.onSnapshot(snapshot => setJob(snapshot.data()))
 				: () => {

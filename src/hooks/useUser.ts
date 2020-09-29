@@ -52,7 +52,10 @@ export function useUser(
 				return
 			}
 			const u = await Firestore.collection("users").doc(uid).get()
-			if (!u.exists) await Firestore.collection("users").doc(uid).set({})
+			if (!u.exists)
+				await Firestore.collection("users")
+					.doc(uid)
+					.set({ createdAt: firestore.Timestamp.now() })
 		} catch (err) {
 			console.error(err)
 		}
