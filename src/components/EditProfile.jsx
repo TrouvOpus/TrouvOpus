@@ -10,6 +10,7 @@ import {
 	Radio,
 	RadioGroup,
 	CircularProgress,
+	Switch,
 } from "@material-ui/core"
 import { withSnackbar } from "notistack"
 import { useMatchable, useAuth, useMetadata } from "../hooks"
@@ -29,6 +30,7 @@ export default withSnackbar(({ enqueueSnackbar, onSave }) => {
 	)
 	const skillSet = useMetadata("skillSet")
 
+	const [active, setActive] = React.useState(false)
 	const [name, setName] = React.useState()
 	const [phone, setPhone] = React.useState()
 	const [gender, setGender] = React.useState("male")
@@ -40,6 +42,7 @@ export default withSnackbar(({ enqueueSnackbar, onSave }) => {
 	React.useEffect(() => {
 		setIsLoading(!user)
 		if (user) {
+			setActive(user.active)
 			setName(user.name)
 			setGender(user.gender)
 			setPhone(user.phone)
@@ -53,7 +56,7 @@ export default withSnackbar(({ enqueueSnackbar, onSave }) => {
 		}
 	}, [setIsLoading, user])
 
-	const formData = { name, gender, phone, dob }
+	const formData = { active, name, gender, phone, dob }
 
 	function getUpdatedData() {
 		let data = {}
@@ -103,6 +106,19 @@ export default withSnackbar(({ enqueueSnackbar, onSave }) => {
 							<Grid item>
 								<Grid item>
 									<h1>Profile</h1>
+								</Grid>
+								<Grid item>
+									<FormControl>
+										<FormControlLabel
+											control={
+												<Switch
+													checked={active}
+													onChange={() => setActive(!active)}
+												/>
+											}
+											label="Actively Looking"
+										/>
+									</FormControl>
 								</Grid>
 								<Grid container direction="row" spacing={1}>
 									<Grid item>

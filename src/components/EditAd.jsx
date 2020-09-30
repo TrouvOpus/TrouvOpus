@@ -10,6 +10,9 @@ import {
 	useTheme,
 	useMediaQuery,
 	CircularProgress,
+	Switch,
+	FormControl,
+	FormControlLabel,
 } from "@material-ui/core"
 import { useMetadata, useMatchable } from "../hooks"
 import SkillSelector, {
@@ -29,6 +32,7 @@ export default withSnackbar(({ enqueueSnackbar, open, onClose, uid }) => {
 		true,
 		true
 	)
+	const [active, setActive] = React.useState(false)
 	const [title, setTitle] = React.useState()
 	const [description, setDescription] = React.useState()
 	const [isLoading, setIsLoading] = React.useState(false)
@@ -37,6 +41,7 @@ export default withSnackbar(({ enqueueSnackbar, open, onClose, uid }) => {
 	React.useEffect(() => {
 		setIsLoading(!job)
 		if (job) {
+			setActive(job.active)
 			setTitle(job.title)
 			setDescription(job.description)
 			if (job.skills) {
@@ -48,7 +53,7 @@ export default withSnackbar(({ enqueueSnackbar, open, onClose, uid }) => {
 		}
 	}, [job])
 
-	const formData = { title, description }
+	const formData = { active, title, description }
 
 	function getUpdatedData() {
 		let data = {}
@@ -94,6 +99,19 @@ export default withSnackbar(({ enqueueSnackbar, open, onClose, uid }) => {
 						<CircularProgress />
 					) : (
 						<Grid container direction="column" spacing={2}>
+							<Grid item>
+								<FormControl>
+									<FormControlLabel
+										control={
+											<Switch
+												checked={active}
+												onChange={() => setActive(!active)}
+											/>
+										}
+										label="Actively Recruiting"
+									/>
+								</FormControl>
+							</Grid>
 							<Grid item>
 								<TextField
 									label="Title"

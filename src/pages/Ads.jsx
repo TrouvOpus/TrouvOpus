@@ -9,12 +9,20 @@ import {
 	IconButton,
 	Dialog,
 	Card,
+	CardHeader,
+	CardContent,
 	Container,
 	Toolbar,
+	CardActions,
+	Fab,
+	makeStyles,
 } from "@material-ui/core"
-import { Edit, NavigateNext, Close } from "@material-ui/icons"
+import { Edit, NavigateNext, Close, Add } from "@material-ui/icons"
 import { useAuth } from "../hooks"
 import Feed from "./Feed"
+import { firestore } from "firebase"
+
+const useStyles = makeStyles({ fab: { marginLeft: "auto" } })
 
 const Ad = ({ id, title, description }) => {
 	const [editOpen, setEditOpen] = React.useState(false)
@@ -50,11 +58,27 @@ export default () => {
 	const { currentUser } = useAuth()
 	const { Firestore } = React.useContext(FirebaseContext)
 	const [ads, setAds] = React.useState([])
+	const classes = useStyles()
+
+	async function createAd() {
+		try {
+			if (!currentUser) throw new Error("Please log in")
+			const ref = await Firestore.collection("jobs").add({
+				title: "New Ad",
+				createdAt: firestore.Timestamp.now(),
+				createdBy: currentUser && currentUser.uid,
+			})
+			return ref.id
+		} catch (error) {
+			console.error(error)
+		}
+	}
 
 	React.useEffect(() => {
 		if (!currentUser) return
 		return Firestore.collection("jobs")
 			.where("createdBy", "==", currentUser && currentUser.uid)
+			.orderBy("createdAt", "desc")
 			.onSnapshot(snapshot => {
 				let a = []
 				snapshot.forEach(doc => {
@@ -64,16 +88,26 @@ export default () => {
 			})
 	}, [currentUser, Firestore])
 
-	console.log("Ads", ads)
-
 	return (
 		<div className="Ads Page">
 			<Card>
-				<List>
-					{ads.map(a => (
-						<Ad id={a.id} title={a.title} description={a.description} />
-					))}
-				</List>
+				<CardHeader title="MyAds" />
+				<CardContent>
+					<List>
+						{ads.map(a => (
+							<Ad id={a.id} title={a.title} description={a.description} />
+						))}
+					</List>
+				</CardContent>
+				<CardActions>
+					<Fab
+						color="primary"
+						className={classes.fab}
+						onClick={() => createAd()}
+					>
+						<Add />
+					</Fab>
+				</CardActions>
 			</Card>
 		</div>
 	)

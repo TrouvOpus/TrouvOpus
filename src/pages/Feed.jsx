@@ -35,14 +35,16 @@ export default ({ type, uid }) => {
 				)
 				.map(i => {
 					return (
-						<Grid item xs>
-							<FeedCard
-								key={i}
-								item={{ ...feed.items[i], id: i }}
-								liked={user && user.likes && user.likes.includes(i)}
-								onLike={() => like(i)}
-							/>
-						</Grid>
+						feed.items[i]["active"] && (
+							<Grid item xs>
+								<FeedCard
+									key={i}
+									item={{ ...feed.items[i], id: i }}
+									liked={user && user.likes && user.likes.includes(i)}
+									onLike={() => like(i)}
+								/>
+							</Grid>
+						)
 					)
 				})}
 		</Grid>

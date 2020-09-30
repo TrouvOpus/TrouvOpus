@@ -55,7 +55,7 @@ export function useMatchable(
 			if (!i.exists)
 				await Firestore.collection(collection)
 					.doc(uid)
-					.set({ createdAt: firestore.Timestamp.now() })
+					.set({ createdAt: firestore.Timestamp.now(), active: true })
 		} catch (err) {
 			console.error(err)
 		}
