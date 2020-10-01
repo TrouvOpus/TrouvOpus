@@ -1,13 +1,15 @@
 import React from "react"
-import Paper from "@material-ui/core/Paper"
-import List from "@material-ui/core/List"
-import ListItem from "@material-ui/core/ListItem"
-import ListItemAvatar from "@material-ui/core/ListItemAvatar"
-import ListItemText from "@material-ui/core/ListItemText"
-import ListSubheader from "@material-ui/core/ListSubheader"
-import { makeStyles } from "@material-ui/core/styles"
-import Avatar from "@material-ui/core/Avatar"
-import Typography from "@material-ui/core/Typography"
+import {
+	Paper,
+	List,
+	ListItem,
+	ListItemAvatar,
+	ListItemText,
+	ListSubheader,
+	makeStyles,
+	Avatar,
+	Typography,
+} from "@material-ui/core"
 
 const messages = [
 	{

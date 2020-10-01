@@ -6,7 +6,10 @@ import Profile from "./pages/Profile"
 import Feed from "./pages/Feed"
 import Ads from "./pages/Ads"
 import Activity from "./pages/Activity"
+import Home from "./pages/Home"
 import Error from "./pages/Error"
+
+import { useAuth } from "./hooks"
 
 export default () => {
 	const { currentUser } = useAuth()

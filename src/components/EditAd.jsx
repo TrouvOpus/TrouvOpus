@@ -98,7 +98,14 @@ export default withSnackbar(({ enqueueSnackbar, open, onClose, uid }) => {
 					<Grid container justify="space-between">
 						<Grid item>Edit Job</Grid>
 						<Grid item>
-							<IconButton onClick={() => deleteJob()}>
+							<IconButton
+								onClick={() => {
+									deleteJob().then(() =>
+										enqueueSnackbar("Deleted!", { variant: "success" })
+									)
+									onClose && onClose()
+								}}
+							>
 								<Delete />
 							</IconButton>
 						</Grid>

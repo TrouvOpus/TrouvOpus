@@ -22,6 +22,7 @@ export function useMatchable(
 	getItem: () => void
 	updateItem: (updates: firestore.UpdateData) => void
 	deleteItem: () => void
+	getMatches: () => Promise<Item[]>
 } {
 	const { Firestore } = React.useContext(FirebaseContext)
 	const [item, setItem] = React.useState<Item>(null)
@@ -44,6 +45,30 @@ export function useMatchable(
 			console.error(err)
 		}
 	}, [Firestore, collection, uid])
+
+	/**
+	 * To get the matches
+	 */
+
+	async function getMatches(): Promise<Item[]> {
+		let matches: Item[] = []
+		try {
+			if (!uid || !item) throw Error("UID not defined!")
+			const snapshot = await Firestore.collection(
+				type === "user" ? "jobs" : "users"
+			)
+				.where("likes", "array-contains", uid)
+				.get()
+			snapshot.forEach(doc => {
+				console.log(item.likes, doc.id)
+				if (item && item.likes.includes(doc.id))
+					console.log("This is a match", { ...doc.data(), id: doc.id })
+			})
+		} catch (error) {
+			console.error(error)
+		}
+		return matches
+	}
 
 	/**
 	 * To create the item's document in the Cloud Firestore if it doesn't already exist
@@ -112,5 +137,5 @@ export function useMatchable(
 		[listen, Firestore, uid]
 	)
 
-	return { item, getItem, updateItem, deleteItem }
+	return { item, getItem, updateItem, deleteItem, getMatches }
 }

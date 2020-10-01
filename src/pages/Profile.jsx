@@ -32,7 +32,7 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 	const landscape = useMediaQuery("(orientation:landscape)")
 	const { currentUser } = useAuth()
 	const { Auth } = React.useContext(FirebaseContext)
-	const { item: user } = useMatchable(
+	const { item: user, getMatches } = useMatchable(
 		"user",
 		currentUser && currentUser.uid,
 		true,
@@ -48,6 +48,10 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 		)
 		return sk
 	}
+
+	React.useEffect(() => {
+		getMatches().then(matches => console.log(matches))
+	}, [user, getMatches])
 
 	const layout = landscape && getSkills().length !== 0
 	const [open, setOpen] = React.useState(false)

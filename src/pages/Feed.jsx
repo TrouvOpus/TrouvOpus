@@ -8,19 +8,17 @@ import { useFeed, useAuth, useMatchable } from "../hooks"
 export default ({ type, uid }) => {
 	const { currentUser } = useAuth()
 	const feed = useFeed(type, uid)
-	const { item: user, updateItem: updateUser } = useMatchable(
-		"user",
-		currentUser && currentUser.uid,
-		true
-	)
+	const { item, updateItem } = useMatchable(type, uid, true)
 
-	async function like(uid) {
-		const likes = (user && user.likes) || []
-		updateUser(
-			likes.includes(uid)
-				? { likes: likes.filter(x => x !== uid) }
-				: { likes: [...likes, uid] }
-		)
+	console.log("Likes", item && item.likes)
+
+	async function like(id) {
+		const likes = (type && type.likes) || []
+		updateItem(
+			likes.includes(id)
+				? { likes: likes.filter(x => x !== id) }
+				: { likes: [...likes, id] }
+		).then(() => console.log(uid + " liked " + id))
 	}
 
 	return currentUser === null ? (
@@ -40,7 +38,7 @@ export default ({ type, uid }) => {
 								<FeedCard
 									key={i}
 									item={{ ...feed.items[i], id: i }}
-									liked={user && user.likes && user.likes.includes(i)}
+									liked={item && item.likes && item.likes.includes(i)}
 									onLike={() => like(i)}
 								/>
 							</Grid>
