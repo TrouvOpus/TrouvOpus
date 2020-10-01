@@ -19,7 +19,7 @@ export default () => {
 					<Feed type="applicant" uid={currentUser && currentUser.uid} />
 				</Route>
 				<Route path="/ads" component={Ads} />
-                <Route path="/activity" component={Activity} />
+				<Route path="/activity" component={Activity} />
 				<Route exact path="/" component={Home} />
 				<Route component={Error} />
 			</Switch>
