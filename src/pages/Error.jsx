@@ -20,7 +20,7 @@ const messages = [
 		id: 2,
 		primary: "You have new job profiles to browse",
 		secondary:
-			"New Companies like Infoysys and Intel have joined TrouvOpus. Take a look now!",
+			"New Companies like Infosys and Intel have joined TrouvOpus. Take a look now!",
 		company: "",
 	},
 	{
