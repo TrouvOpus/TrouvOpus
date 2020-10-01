@@ -48,7 +48,8 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 		)
 		return sk
 	}
-	console.log(landscape)
+
+	const layout = landscape && getSkills().length !== 0
 	const [open, setOpen] = React.useState(false)
 	return currentUser === null ? (
 		<Redirect to="/login" />
@@ -60,8 +61,8 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 				My Ads
 			</Button>
 			<Card>
-				<Grid container direction={landscape ? "row" : "column"}>
-					<Grid item xs={landscape ? "6" : "0"}>
+				<Grid container direction={layout ? "row" : "column"}>
+					<Grid item xs={layout ? "6" : "0"}>
 						<Box px={4} py={2}>
 							<Typography variant="h4" component="h4">
 								{user && user.name}
@@ -83,20 +84,22 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 								</Grid>
 							</Grid>
 							<Box py={3}>
-								<Typography py={2} display="flex">
+								<Typography py={2} fullWidth>
 									{user && user.objective}
 								</Typography>
 							</Box>
 						</Box>
 					</Grid>
-					<Grid item xs={landscape ? "6" : "0"}>
-						<Box px={4} py={2}>
-							<Typography variant="h5" component="h5">
-								Skill set:
-							</Typography>
-							<SkillSelector skills={getSkills()} />
-						</Box>
-					</Grid>
+					{getSkills().length !== 0 && (
+						<Grid item xs={layout ? "6" : "0"}>
+							<Box px={4} py={2}>
+								<Typography variant="h5" component="h5">
+									Skill set:
+								</Typography>
+								<SkillSelector skills={getSkills()} />
+							</Box>
+						</Grid>
+					)}
 				</Grid>
 
 				<Fab
