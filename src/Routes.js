@@ -1,13 +1,12 @@
 import React from "react"
 import { Switch, Route } from "react-router-dom"
 
-import Home from "./pages/Home"
 import Login from "./pages/Login"
-import Error from "./pages/Error"
 import Profile from "./pages/Profile"
 import Feed from "./pages/Feed"
 import Ads from "./pages/Ads"
-import { useAuth } from "./hooks"
+import Activity from "./pages/Activity"
+import Error from "./pages/Error"
 
 export default () => {
 	const { currentUser } = useAuth()
@@ -20,6 +19,7 @@ export default () => {
 					<Feed type="applicant" uid={currentUser && currentUser.uid} />
 				</Route>
 				<Route path="/ads" component={Ads} />
+                <Route path="/activity" component={Activity} />
 				<Route exact path="/" component={Home} />
 				<Route component={Error} />
 			</Switch>
