@@ -64,9 +64,11 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 				<Grid container direction={layout ? "row" : "column"}>
 					<Grid item xs={layout ? "6" : "0"}>
 						<Box px={4} py={2}>
-							<Typography variant="h4" component="h4">
-								{user && user.name}
-							</Typography>
+							<Box py={2}>
+								<Typography variant="h4" component="h4">
+									{user && user.name}
+								</Typography>
+							</Box>
 							<Grid container direction="row" spacing={2}>
 								<Grid item>
 									<Chip
@@ -93,9 +95,11 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 					{getSkills().length !== 0 && (
 						<Grid item xs={layout ? "6" : "0"}>
 							<Box px={4} py={2}>
-								<Typography variant="h5" component="h5">
-									Skill set:
-								</Typography>
+								<Box py={2}>
+									<Typography variant="h5" component="h5">
+										Skill set:
+									</Typography>
+								</Box>
 								<SkillSelector skills={getSkills()} />
 							</Box>
 						</Grid>

@@ -13,7 +13,9 @@ import {
 	Switch,
 	FormControl,
 	FormControlLabel,
+	IconButton,
 } from "@material-ui/core"
+import { Delete } from "@material-ui/icons"
 import { useMetadata, useMatchable } from "../hooks"
 import SkillSelector, {
 	skillReducer,
@@ -26,12 +28,11 @@ export default withSnackbar(({ enqueueSnackbar, open, onClose, uid }) => {
 	const theme = useTheme()
 	const fullScreen = useMediaQuery(theme.breakpoints.down("sm"))
 	const skillSet = useMetadata("skillSet")
-	const { item: job, updateItem: updateJob } = useMatchable(
-		"job",
-		uid,
-		true,
-		true
-	)
+	const {
+		item: job,
+		updateItem: updateJob,
+		deleteItem: deleteJob,
+	} = useMatchable("job", uid, true, true)
 	const [active, setActive] = React.useState(false)
 	const [title, setTitle] = React.useState()
 	const [description, setDescription] = React.useState()
@@ -93,7 +94,16 @@ export default withSnackbar(({ enqueueSnackbar, open, onClose, uid }) => {
 					save()
 				}}
 			>
-				<DialogTitle>Edit Job</DialogTitle>
+				<DialogTitle>
+					<Grid container justify="space-between">
+						<Grid item>Edit Job</Grid>
+						<Grid item>
+							<IconButton onClick={() => deleteJob()}>
+								<Delete />
+							</IconButton>
+						</Grid>
+					</Grid>
+				</DialogTitle>
 				<DialogContent dividers>
 					{isLoading ? (
 						<CircularProgress />

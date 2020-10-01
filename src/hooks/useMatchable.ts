@@ -21,6 +21,7 @@ export function useMatchable(
 	item: Item
 	getItem: () => void
 	updateItem: (updates: firestore.UpdateData) => void
+	deleteItem: () => void
 } {
 	const { Firestore } = React.useContext(FirebaseContext)
 	const [item, setItem] = React.useState<Item>(null)
@@ -76,6 +77,17 @@ export function useMatchable(
 	}
 
 	/**
+	 * To delete the item from the Firestore
+	 */
+	async function deleteItem() {
+		try {
+			await Firestore.collection(collection).doc(uid).delete()
+		} catch (error) {
+			console.error(error)
+		}
+	}
+
+	/**
 	 * An effect to create the item if it doesn't already exist
 	 */
 
@@ -100,5 +112,5 @@ export function useMatchable(
 		[listen, Firestore, uid]
 	)
 
-	return { item, getItem, updateItem }
+	return { item, getItem, updateItem, deleteItem }
 }
