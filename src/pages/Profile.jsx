@@ -38,6 +38,7 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 		true,
 		true
 	)
+	const [matches, setMatches] = React.useState()
 	const theme = useTheme()
 	const classes = useStyles(theme)
 
@@ -50,11 +51,14 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 	}
 
 	React.useEffect(() => {
-		getMatches().then(matches => console.log(matches))
-	}, [user, getMatches])
+		getMatches().then(m => {
+			if (m && m.length && m.length !== 0 && !matches) setMatches(m)
+		})
+	}, [matches, getMatches])
 
 	const layout = landscape && getSkills().length !== 0
 	const [open, setOpen] = React.useState(false)
+
 	return currentUser === null ? (
 		<Redirect to="/login" />
 	) : currentUser === undefined ? (
@@ -109,6 +113,9 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 						</Grid>
 					)}
 				</Grid>
+
+				<h5>Matches</h5>
+				{matches && matches.map(m => <div>{m.title}</div>)}
 
 				<Fab
 					className={classes.fab}

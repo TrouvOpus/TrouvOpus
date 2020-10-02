@@ -51,23 +51,23 @@ export function useMatchable(
 	 */
 
 	async function getMatches(): Promise<Item[]> {
-		let matches: Item[] = []
 		try {
-			if (!uid || !item) throw Error("UID not defined!")
+			let matches: Item[] = []
+			if (!uid || !item) return []
 			const snapshot = await Firestore.collection(
 				type === "user" ? "jobs" : "users"
 			)
 				.where("likes", "array-contains", uid)
 				.get()
 			snapshot.forEach(doc => {
-				console.log(item.likes, doc.id)
 				if (item && item.likes.includes(doc.id))
-					console.log("This is a match", { ...doc.data(), id: doc.id })
+					matches.push({ ...doc.data(), id: doc.id })
 			})
+			return matches
 		} catch (error) {
 			console.error(error)
 		}
-		return matches
+		return []
 	}
 
 	/**
@@ -104,6 +104,7 @@ export function useMatchable(
 	/**
 	 * To delete the item from the Firestore
 	 */
+
 	async function deleteItem() {
 		try {
 			await Firestore.collection(collection).doc(uid).delete()
@@ -123,6 +124,7 @@ export function useMatchable(
 	/**
 	 * An effect to get the item's data and/or listen for changes.
 	 */
+
 	React.useEffect(
 		uid
 			? listen

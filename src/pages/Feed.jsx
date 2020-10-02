@@ -8,17 +8,18 @@ import { useFeed, useAuth, useMatchable } from "../hooks"
 export default ({ type, uid }) => {
 	const { currentUser } = useAuth()
 	const feed = useFeed(type, uid)
-	const { item, updateItem } = useMatchable(type, uid, true)
+	const { item, updateItem } = useMatchable(
+		type === "applicant" ? "user" : type === "recruiter" ? "job" : "",
+		uid,
+		true
+	)
 
-	console.log("Likes", item && item.likes)
-
-	async function like(id) {
-		const likes = (type && type.likes) || []
-		updateItem(
-			likes.includes(id)
-				? { likes: likes.filter(x => x !== id) }
-				: { likes: [...likes, id] }
-		).then(() => console.log(uid + " liked " + id))
+	function like(id) {
+		const likes = (item && item.likes) || []
+		const newDoc = likes.includes(id)
+			? { likes: likes.filter(x => x !== id) }
+			: { likes: [...likes, id] }
+		updateItem({ ...newDoc })
 	}
 
 	return currentUser === null ? (
