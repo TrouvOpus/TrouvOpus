@@ -18,6 +18,7 @@ import Progress from "../components/Progress"
 export default ({ item, onLike = () => {}, liked = false, type = "job" }) => {
 	const [open, setOpen] = React.useState(false)
 	const theme = useTheme()
+	const expandable = type === "job" && item.description
 
 	function getSkills() {
 		let sk = []
@@ -57,9 +58,11 @@ export default ({ item, onLike = () => {}, liked = false, type = "job" }) => {
 						</Grid>
 						<SkillSelector skills={getSkills()} />
 					</CardContent>
-					<Collapse in={open}>
-						<CardContent>Details</CardContent>
-					</Collapse>
+					{expandable && (
+						<Collapse in={open}>
+							<CardContent>{item.description}</CardContent>
+						</Collapse>
+					)}
 					<CardActionArea>
 						<IconButton
 							onClick={onLike}
@@ -67,9 +70,11 @@ export default ({ item, onLike = () => {}, liked = false, type = "job" }) => {
 						>
 							<Favorite />
 						</IconButton>
-						<IconButton onClick={() => setOpen(!open)}>
-							<ExpandMore />
-						</IconButton>
+						{expandable && (
+							<IconButton onClick={() => setOpen(!open)}>
+								<ExpandMore />
+							</IconButton>
+						)}
 					</CardActionArea>
 				</Card>
 			</Box>
