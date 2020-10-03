@@ -1,10 +1,17 @@
 import React from "react"
 import { Button, Grid } from "@material-ui/core"
 import { Link } from "react-router-dom"
-import { useAuth } from "../hooks"
+import { useAuth, useData } from "../hooks"
 
 export default () => {
 	const { currentUser } = useAuth()
+	const { getAllItems } = useData()
+	const [users, setUsers] = React.useState([])
+
+	React.useEffect(() => {
+		getAllItems("users").then(u => setUsers(u))
+	}, [getAllItems])
+
 	return (
 		<div className="Home Page">
 			<Grid
@@ -30,6 +37,7 @@ export default () => {
 						</Button>
 					</Grid>
 				)}
+				{users && Object.keys(users).map(u => <div>{u}</div>)}
 			</Grid>
 		</div>
 	)

@@ -1,6 +1,5 @@
 import React from "react"
-import FirestoreContext from "../contexts/FirebaseContext"
-import { useMatchable } from "."
+import { useMatchable, useData } from "."
 
 /**
  * To return the compatibility ratios of an object with respect to another object.
@@ -25,35 +24,15 @@ function getCompatibilityRatios(
  * @param id The ID of the user whose feed must be fetched.
  */
 export function useFeed(type: "applicant" | "recruiter", id: string) {
-	const { Firestore } = React.useContext(FirestoreContext)
 	const { item } = useMatchable(type === "applicant" ? "user" : "job", id)
 	const [items, setItems] = React.useState<{
 		[id: string]: firebase.firestore.DocumentData
 	}>({})
-
-	const getAllItems = React.useCallback(
-		async function (): Promise<{
-			[id: string]: firebase.firestore.DocumentData
-		}> {
-			let items: { [id: string]: firebase.firestore.DocumentData } = {}
-			try {
-				const snap = await Firestore.collection(
-					type === "applicant" ? "jobs" : "users"
-				).get()
-				snap.forEach(doc => {
-					items[doc.id] = doc.data()
-				})
-			} catch (error) {
-				console.error(error)
-			}
-			return items
-		},
-		[Firestore, type]
-	)
+	const { getAllItems } = useData()
 
 	const getJobCompatibility = React.useCallback(
 		function () {
-			getAllItems().then(items => {
+			getAllItems(type === "applicant" ? "jobs" : "users").then(items => {
 				Object.keys(items).forEach(i => {
 					const ratios =
 						type === "applicant"
