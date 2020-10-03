@@ -32,13 +32,13 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 	const landscape = useMediaQuery("(orientation:landscape)")
 	const { currentUser } = useAuth()
 	const { Auth } = React.useContext(FirebaseContext)
-	const { item: user, getMatches } = useMatchable(
+	const { item: user } = useMatchable(
 		"user",
 		currentUser && currentUser.uid,
 		true,
 		true
 	)
-	const [matches, setMatches] = React.useState()
+
 	const theme = useTheme()
 	const classes = useStyles(theme)
 
@@ -49,12 +49,6 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 		)
 		return sk
 	}
-
-	React.useEffect(() => {
-		getMatches().then(m => {
-			if (m && m.length && m.length !== 0 && !matches) setMatches(m)
-		})
-	}, [matches, getMatches])
 
 	const layout = landscape && getSkills().length !== 0
 	const [open, setOpen] = React.useState(false)
@@ -113,10 +107,6 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 						</Grid>
 					)}
 				</Grid>
-
-				<h5>Matches</h5>
-				{matches && matches.map(m => <div>{m.title}</div>)}
-
 				<Fab
 					className={classes.fab}
 					color="secondary"

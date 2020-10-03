@@ -1,111 +1,81 @@
 import React from "react"
 import {
-	Paper,
+	Card,
+	CardHeader,
+	CardContent,
 	List,
+	ListSubheader,
 	ListItem,
 	ListItemAvatar,
 	ListItemText,
-	ListSubheader,
-	makeStyles,
 	Avatar,
-	Typography,
 } from "@material-ui/core"
+import { useAuth, useMatchable } from "../hooks"
+import FirebaseContext from "../contexts/FirebaseContext"
 
-const messages = [
-	{
-		id: 1,
-		primary: "You are matched with a prestigious company",
-		secondary: "Hindustan Pvt Ltd has liked your profile.",
-		company: "",
-	},
-	{
-		id: 2,
-		primary: "You have new job profiles to browse",
-		secondary:
-			"New Companies like Infosys and Intel have joined TrouvOpus. Take a look now!",
-		company: "",
-	},
-	{
-		id: 3,
-		primary: "New Company has selected you",
-		secondary: "Microsoft India has liked your profile",
-		company: "",
-	},
-	{
-		id: 4,
-		primary: "Any Skills to share?",
-		secondary: "Update your profile to get the maximum matching percentage",
-		company: "",
-	},
-	{
-		id: 5,
-		primary: "You have new job profiles to browse",
-		secondary: "Take a look now",
-		company: "",
-	},
-]
+function MatchList({ type, uid }) {
+	const { item, getMatches } = useMatchable(type, uid, true)
 
-const useStyles = makeStyles(theme => ({
-	text: {
-		padding: theme.spacing(2, 2, 0),
-	},
-	paper: {
-		paddingBottom: 50,
-	},
-	list: {
-		marginBottom: theme.spacing(2),
-	},
-	subheader: {
-		backgroundColor: theme.palette.background.paper,
-	},
-	appBar: {
-		top: "auto",
-		bottom: 0,
-	},
-	grow: {
-		flexGrow: 1,
-	},
-	fabButton: {
-		position: "absolute",
-		zIndex: 1,
-		top: -30,
-		left: 0,
-		right: 0,
-		margin: "0 auto",
-	},
-}))
-export default () => {
-	const classes = useStyles()
+	const [matches, setMatches] = React.useState()
+
+	console.log("Matches", uid, type, matches)
+
+	React.useEffect(() => {
+		getMatches().then(m => {
+			if (m && m.length && m.length !== 0 && !matches) setMatches(m)
+		})
+	}, [matches, getMatches])
 
 	return (
-		<React.Fragment>
-			<Paper square className={classes.paper}>
-				<Typography className={classes.text} variant="h5" gutterBottom>
-					Notifications
-				</Typography>
-				<List className={classes.list}>
-					{messages.map(({ id, primary, secondary, company }) => (
-						<React.Fragment key={id}>
-							{id === 1 && (
-								<ListSubheader className={classes.subheader}>
-									Today
-								</ListSubheader>
-							)}
-							{id === 3 && (
-								<ListSubheader className={classes.subheader}>
-									Yesterday
-								</ListSubheader>
-							)}
-							<ListItem button>
-								<ListItemAvatar>
-									<Avatar alt="Profile Picture" src={company} />
-								</ListItemAvatar>
-								<ListItemText primary={primary} secondary={secondary} />
-							</ListItem>
-						</React.Fragment>
+		<>
+			{matches &&
+				matches.map(({ id, title, name }) => (
+					<ListItem button key={id}>
+						<ListItemAvatar>
+							<Avatar />
+						</ListItemAvatar>
+						<ListItemText primary={title || name} secondary={item.title} />
+					</ListItem>
+				))}
+		</>
+	)
+}
+
+export default () => {
+	const { currentUser } = useAuth()
+	const uid = currentUser && currentUser.uid
+	// const { item: user } = useMatchable("user", uid, true)
+	const { Firestore } = React.useContext(FirebaseContext)
+	const [jobs, setJobs] = React.useState([])
+	console.log("Jobs", jobs)
+
+	React.useEffect(() => {
+		if (uid)
+			Firestore.collection("jobs")
+				.where("createdBy", "==", uid)
+				.get()
+				.then(snapshot => {
+					let j = []
+					snapshot.forEach(doc => {
+						j.push(doc.id)
+					})
+					setJobs(j)
+				})
+	}, [Firestore, uid])
+
+	return (
+		<Card>
+			<CardHeader title="Notifications" />
+			<CardContent>
+				<List>
+					<ListSubheader>Jobs</ListSubheader>
+					<MatchList type="user" uid={uid} />
+					<ListSubheader>Applicants</ListSubheader>
+					{jobs.map(j => (
+						<MatchList type="job" uid={j} />
 					))}
 				</List>
-			</Paper>
-		</React.Fragment>
+			</CardContent>
+		</Card>
 	)
 }
