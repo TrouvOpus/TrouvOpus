@@ -54,13 +54,14 @@ export default withSnackbar(({ enqueueSnackbar, open, onClose, uid }) => {
 		}
 	}, [job])
 
-	const formData = { active, title, description }
+	const formData = { title, description }
 
 	function getUpdatedData() {
 		let data = {}
 		Object.keys(formData).forEach(d => {
 			if (formData[d]) data[d] = formData[d]
 		})
+		data["active"] = active
 		data["skills"] = {}
 		skill.forEach(s => {
 			if (
@@ -95,7 +96,7 @@ export default withSnackbar(({ enqueueSnackbar, open, onClose, uid }) => {
 				}}
 			>
 				<DialogTitle>
-					<Grid container justify="space-between">
+					<Grid container justify="space-between" alignItems="center">
 						<Grid item>Edit Job</Grid>
 						<Grid item>
 							<IconButton

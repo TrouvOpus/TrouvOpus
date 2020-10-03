@@ -109,7 +109,7 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 				</Grid>
 				<Fab
 					className={classes.fab}
-					color="secondary"
+					color="primary"
 					onClick={() => setOpen(true)}
 				>
 					<Edit />

@@ -58,13 +58,14 @@ export default withSnackbar(({ enqueueSnackbar, onSave }) => {
 		}
 	}, [setIsLoading, user])
 
-	const formData = { active, name, gender, phone, objective, dob }
+	const formData = { name, gender, phone, objective, dob }
 
 	function getUpdatedData() {
 		let data = {}
 		Object.keys(formData).forEach(d => {
 			if (formData[d]) data[d] = formData[d]
 		})
+		data["active"] = active
 		data["skills"] = {}
 		skill.forEach(s => {
 			if (
