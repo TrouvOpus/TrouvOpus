@@ -55,7 +55,7 @@ export default () => {
 		],
 	}
 
-	const jobProvider = {
+	const adStatus = {
 		labels: ["Active", "Non-active"],
 		datasets: [
 			{
@@ -74,8 +74,8 @@ export default () => {
 					<Pie data={jobSeeker} />
 				</Grid>
 				<Grid item>
-					<h3>Job Providers</h3>
-					<Pie data={jobProvider} />
+					<h3>Ad Status</h3>
+					<Pie data={adStatus} />
 				</Grid>
 			</Grid>
 		</div>

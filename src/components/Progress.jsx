@@ -10,7 +10,7 @@ const useStylesFacebook = makeStyles(theme => ({
 		color: theme.palette.grey[theme.palette.type === "light" ? 200 : 700],
 	},
 	top: {
-		color: "primary",
+		color: theme.palette.secondary.main,
 		animationDuration: "550ms",
 		position: "absolute",
 		left: 0,

@@ -212,7 +212,7 @@ export default withSnackbar(({ enqueueSnackbar, onSave }) => {
 								<SkillSelector skills={skill} dispatch={dispatchSkill} />
 							</Grid>
 							<Grid item right>
-								<Button type="submit" variant="contained" color="primary">
+								<Button type="submit" variant="contained" color="secondary">
 									Save
 								</Button>
 							</Grid>

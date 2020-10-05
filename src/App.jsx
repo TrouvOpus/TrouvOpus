@@ -28,11 +28,11 @@ export default _ => {
 		palette: {
 			type: prefersDarkMode ? "dark" : "light",
 			primary: {
-				main: cyan[500],
+				main: "#2D4059",
 				contrastText: "#fff",
 			},
 			secondary: {
-				main: amber[700],
+				main: "#EA5455",
 			},
 		},
 	})
