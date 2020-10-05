@@ -6,17 +6,23 @@ import {
 	CardContent,
 	useTheme,
 } from "@material-ui/core"
-import { Pie } from "react-chartjs-2"
+import { Pie, Line } from "react-chartjs-2"
 import FirebaseContext from "../contexts/FirebaseContext"
+import { useMetadata } from "../hooks"
 
 export default () => {
 	const theme = useTheme()
 	const { Firestore } = React.useContext(FirebaseContext)
-	const [users, setUsers] = React.useState(0)
-	const [activeUsers, setActiveUsers] = React.useState(0)
+	const [users, setUsers] = React.useState([])
+	const activeUsers = (users && users.filter(u => u.active)) || []
 
 	const [jobs, setJobs] = React.useState(0)
-	const [activeJobs, setActiveJobs] = React.useState(0)
+	const activeJobs = (jobs && jobs.filter(j => j.active)) || []
+
+	const skills = useMetadata("skillSet")
+
+	const [userSkills, setUserSkills] = React.useState({})
+	const [jobSkills, setJobSkills] = React.useState({})
 
 	const primaryColor = theme.palette.primary.main
 	const secondaryColor = theme.palette.secondary.main
@@ -25,14 +31,11 @@ export default () => {
 		Firestore.collection("users")
 			.get()
 			.then(snapshot => {
-				let u = 0
-				let a = 0
+				let u = []
 				snapshot.forEach(doc => {
-					u++
-					if (doc.data().active) a++
+					u.push({ ...doc.data(), id: doc.id })
 				})
 				setUsers(u)
-				setActiveUsers(a)
 			})
 	}, [Firestore])
 
@@ -40,33 +43,49 @@ export default () => {
 		Firestore.collection("jobs")
 			.get()
 			.then(snapshot => {
-				let j = 0
-				let a = 0
+				let j = []
 				snapshot.forEach(doc => {
-					j++
-					if (doc.data().active) a++
+					j.push({ ...doc.data(), id: doc.id })
 				})
 				setJobs(j)
-				setActiveJobs(a)
 			})
 	}, [Firestore])
 
 	const jobSeeker = {
-		labels: ["Active", "Non-active"],
+		labels: ["Active", "Inactive"],
 		datasets: [
 			{
-				data: [activeUsers, users - activeUsers],
+				data: [activeUsers.length, users.length - activeUsers.length],
 				backgroundColor: [primaryColor, secondaryColor],
 			},
 		],
 	}
 
 	const adStatus = {
-		labels: ["Active", "Non-active"],
+		labels: ["Active", "Inactive"],
 		datasets: [
 			{
-				data: [activeJobs, jobs - activeJobs],
+				data: [activeJobs.length, jobs.length - activeJobs.length],
 				backgroundColor: [primaryColor, secondaryColor],
+			},
+		],
+	}
+
+	const data = {
+		labels: skills && skills.options && skills.options.sort(),
+		datasets: [
+			{
+				label: "First dataset",
+				data: [33, 53, 85, 41, 44, 65],
+				fill: true,
+				backgroundColor: "rgba(75,192,192,0.2)",
+				borderColor: "rgba(75,192,192,1)",
+			},
+			{
+				label: "Second dataset",
+				data: [33, 25, 35, 51, 54, 76],
+				fill: false,
+				borderColor: "#742774",
 			},
 		],
 	}
@@ -87,6 +106,14 @@ export default () => {
 						<CardHeader title="Ad Status" />
 						<CardContent>
 							<Pie data={adStatus} />
+						</CardContent>
+					</Card>
+				</Grid>
+				<Grid item>
+					<Card>
+						<CardHeader title="Shami's Idea" />
+						<CardContent>
+							<Line data={data} />
 						</CardContent>
 					</Card>
 				</Grid>

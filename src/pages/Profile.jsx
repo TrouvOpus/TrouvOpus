@@ -20,6 +20,7 @@ import { withSnackbar } from "notistack"
 import FirebaseContext from "../contexts/FirebaseContext"
 import SkillSelector from "../components/SkillSelector"
 import EditProfile from "../components/EditProfile"
+import UserStats from "../components/UserStats"
 
 const useStyles = makeStyles(theme => ({
 	fab: {
@@ -62,59 +63,67 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 			<Button component={Link} to="/ads">
 				My Ads
 			</Button>
-			<Card>
-				<Grid container direction={layout ? "row" : "column"}>
-					<Grid item xs={layout ? "6" : "0"}>
-						<Box px={4} py={2}>
-							<Box py={2}>
-								<Typography variant="h4" component="h4">
-									{user && user.name}
-								</Typography>
-							</Box>
-							<Grid container direction="row" spacing={2}>
-								<Grid item>
-									<Chip
-										icon={<AccountCircle />}
-										label={currentUser && currentUser.email}
-										variant="outlined"
-									/>
-								</Grid>
-								<Grid item>
-									<Chip
-										icon={<PhoneIphone />}
-										label={user && user.phone}
-										variant="outlined"
-									/>
-								</Grid>
-							</Grid>
-							<Box py={3}>
-								<Typography py={2} fullWidth>
-									{user && user.objective}
-								</Typography>
-							</Box>
-						</Box>
-					</Grid>
-					{getSkills().length !== 0 && (
-						<Grid item xs={layout ? "6" : "0"}>
-							<Box px={4} py={2}>
-								<Box py={2}>
-									<Typography variant="h5" component="h5">
-										Skill set:
-									</Typography>
+			<Grid container direction="column">
+				{" "}
+				<Grid item>
+					<Card>
+						<Grid container direction={layout ? "row" : "column"}>
+							<Grid item xs={layout ? "6" : "0"}>
+								<Box px={4} py={2}>
+									<Box py={2}>
+										<Typography variant="h4" component="h4">
+											{user && user.name}
+										</Typography>
+									</Box>
+									<Grid container direction="row" spacing={2}>
+										<Grid item>
+											<Chip
+												icon={<AccountCircle />}
+												label={currentUser && currentUser.email}
+												variant="outlined"
+											/>
+										</Grid>
+										<Grid item>
+											<Chip
+												icon={<PhoneIphone />}
+												label={user && user.phone}
+												variant="outlined"
+											/>
+										</Grid>
+									</Grid>
+									<Box py={3}>
+										<Typography py={2} fullWidth>
+											{user && user.objective}
+										</Typography>
+									</Box>
 								</Box>
-								<SkillSelector skills={getSkills()} />
-							</Box>
+							</Grid>
+							{getSkills().length !== 0 && (
+								<Grid item xs={layout ? "6" : "0"}>
+									<Box px={4} py={2}>
+										<Box py={2}>
+											<Typography variant="h5" component="h5">
+												Skill set:
+											</Typography>
+										</Box>
+										<SkillSelector skills={getSkills()} />
+									</Box>
+								</Grid>
+							)}
 						</Grid>
-					)}
+						<Fab
+							className={classes.fab}
+							color="primary"
+							onClick={() => setOpen(true)}
+						>
+							<Edit />
+						</Fab>
+					</Card>
 				</Grid>
-				<Fab
-					className={classes.fab}
-					color="primary"
-					onClick={() => setOpen(true)}
-				>
-					<Edit />
-				</Fab>
-			</Card>
+				<Grid item>
+					<UserStats />
+				</Grid>
+			</Grid>
 			<Box my={2}>
 				<Button
 					variant="outlined"
