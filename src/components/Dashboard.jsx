@@ -1,5 +1,11 @@
 import React from "react"
-import { Grid, useTheme } from "@material-ui/core"
+import {
+	Grid,
+	Card,
+	CardHeader,
+	CardContent,
+	useTheme,
+} from "@material-ui/core"
 import { Pie } from "react-chartjs-2"
 import FirebaseContext from "../contexts/FirebaseContext"
 
@@ -67,15 +73,22 @@ export default () => {
 
 	return (
 		<div>
-			<h2>User data</h2>
-			<Grid container direction="row">
+			<Grid container direction="row" spacing={2}>
 				<Grid item>
-					<h3>Job Seekers</h3>
-					<Pie data={jobSeeker} />
+					<Card>
+						<CardHeader title="Job Seekers" />
+						<CardContent>
+							<Pie data={jobSeeker} />
+						</CardContent>
+					</Card>
 				</Grid>
 				<Grid item>
-					<h3>Ad Status</h3>
-					<Pie data={adStatus} />
+					<Card>
+						<CardHeader title="Ad Status" />
+						<CardContent>
+							<Pie data={adStatus} />
+						</CardContent>
+					</Card>
 				</Grid>
 			</Grid>
 		</div>
