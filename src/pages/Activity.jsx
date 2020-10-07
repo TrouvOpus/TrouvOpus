@@ -6,6 +6,7 @@ import {
 	Card,
 	CardHeader,
 	CardContent,
+	CircularProgress,
 	Grid,
 	List,
 	ListSubheader,
@@ -14,7 +15,7 @@ import {
 	ListItemText,
 } from "@material-ui/core"
 import { useAuth, useMatchable } from "../hooks"
-import { Link } from "react-router-dom"
+import { Redirect, Link } from "react-router-dom"
 import FirebaseContext from "../contexts/FirebaseContext"
 
 function MatchList({ type, uid }) {
@@ -64,7 +65,11 @@ export default () => {
 				})
 	}, [Firestore, uid])
 
-	return (
+	return currentUser === null ? (
+		<Redirect to="/login" />
+	) : currentUser === undefined ? (
+		<CircularProgress />
+	) : (
 		<Grid container direction="column">
 			<Grid item>
 				<Box py={2}>
