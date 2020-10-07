@@ -34,6 +34,7 @@ export default _ => {
 			secondary: {
 				main: "#EA5455",
 			},
+			text: { primary: "#2D4059" },
 		},
 	})
 

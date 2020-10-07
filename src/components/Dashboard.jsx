@@ -9,6 +9,7 @@ import {
 import { Pie, Line } from "react-chartjs-2"
 import FirebaseContext from "../contexts/FirebaseContext"
 import { useMetadata } from "../hooks"
+import { DashboardRounded } from "@material-ui/icons"
 
 export default () => {
 	const theme = useTheme()
@@ -75,17 +76,16 @@ export default () => {
 		labels: skills && skills.options && skills.options.sort(),
 		datasets: [
 			{
-				label: "First dataset",
+				label: "Resume",
 				data: [33, 53, 85, 41, 44, 65],
 				fill: true,
-				backgroundColor: "rgba(75,192,192,0.2)",
-				borderColor: "rgba(75,192,192,1)",
+				borderColor: primaryColor,
 			},
 			{
-				label: "Second dataset",
+				label: "Ads",
 				data: [33, 25, 35, 51, 54, 76],
 				fill: false,
-				borderColor: "#742774",
+				borderColor: secondaryColor,
 			},
 		],
 	}
@@ -111,7 +111,7 @@ export default () => {
 				</Grid>
 				<Grid item>
 					<Card>
-						<CardHeader title="Shami's Idea" />
+						<CardHeader title="Market demand" />
 						<CardContent>
 							<Line data={data} />
 						</CardContent>

@@ -54,6 +54,8 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 	const layout = landscape && getSkills().length !== 0
 	const [open, setOpen] = React.useState(false)
 
+	console.log("Profile just got rendered!")
+
 	return currentUser === null ? (
 		<Redirect to="/login" />
 	) : currentUser === undefined ? (
@@ -63,8 +65,7 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 			<Button component={Link} to="/ads">
 				My Ads
 			</Button>
-			<Grid container direction="column">
-				{" "}
+			<Grid container direction="column" spacing={2}>
 				<Grid item>
 					<Card>
 						<Grid container direction={layout ? "row" : "column"}>
