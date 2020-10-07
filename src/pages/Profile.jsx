@@ -54,14 +54,17 @@ export default withSnackbar(({ enqueueSnackbar }) => {
 	const layout = landscape && getSkills().length !== 0
 	const [open, setOpen] = React.useState(false)
 
-	console.log("Profile just got rendered!")
-
 	return currentUser === null ? (
 		<Redirect to="/login" />
 	) : currentUser === undefined ? (
 		<CircularProgress />
 	) : (
 		<div className="Profile">
+			<Box py={2}>
+				<Button color="primary" variant="contained" component={Link} to="/">
+					Home
+				</Button>
+			</Box>
 			<Button component={Link} to="/ads">
 				My Ads
 			</Button>

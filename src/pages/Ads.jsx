@@ -2,22 +2,25 @@ import React from "react"
 import EditAd from "../components/EditAd"
 import FirebaseContext from "../contexts/FirebaseContext"
 import {
+	Box,
+	Button,
+	Card,
+	CardActions,
+	CardContent,
+	CardHeader,
+	Container,
+	Dialog,
+	Fab,
+	IconButton,
 	List,
 	ListItem,
 	ListItemSecondaryAction,
 	ListItemText,
-	IconButton,
-	Dialog,
-	Card,
-	CardHeader,
-	CardContent,
-	Container,
-	Toolbar,
-	CardActions,
-	Fab,
 	makeStyles,
+	Toolbar,
 } from "@material-ui/core"
 import { Edit, NavigateNext, Close, Add } from "@material-ui/icons"
+import { Link } from "react-router-dom"
 import { useAuth } from "../hooks"
 import Feed from "./Feed"
 import { firestore } from "firebase"
@@ -90,6 +93,11 @@ export default () => {
 
 	return (
 		<div className="Ads Page">
+			<Box py={2}>
+				<Button color="primary" variant="contained" component={Link} to="/">
+					Home
+				</Button>
+			</Box>
 			<Card>
 				<CardHeader title="My Ads" />
 				<CardContent>

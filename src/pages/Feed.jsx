@@ -1,8 +1,8 @@
 import React from "react"
 import FeedCard from "../components/FeedCard"
-import { Redirect } from "react-router-dom"
+import { Redirect, Link } from "react-router-dom"
 import { CircularProgress } from "@material-ui/core"
-import { Grid } from "@material-ui/core"
+import { Box, Button, Grid } from "@material-ui/core"
 import { useFeed, useAuth, useMatchable } from "../hooks"
 
 export default ({ type, uid }) => {
@@ -28,6 +28,11 @@ export default ({ type, uid }) => {
 		<CircularProgress />
 	) : (
 		<Grid container justifyItems="center" direction="column">
+			<Box py={2}>
+				<Button color="primary" variant="contained" component={Link} to="/">
+					Home
+				</Button>
+			</Box>
 			{Object.keys(feed.items)
 				.sort(
 					(a, b) => feed.items[b].compatibility - feed.items[a].compatibility

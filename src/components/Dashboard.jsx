@@ -8,8 +8,7 @@ import {
 } from "@material-ui/core"
 import { Pie, Line } from "react-chartjs-2"
 import FirebaseContext from "../contexts/FirebaseContext"
-import { useMetadata } from "../hooks"
-import { DashboardRounded } from "@material-ui/icons"
+//import { useMetadata } from "../hooks"
 
 export default () => {
 	const theme = useTheme()
@@ -20,10 +19,10 @@ export default () => {
 	const [jobs, setJobs] = React.useState(0)
 	const activeJobs = (jobs && jobs.filter(j => j.active)) || []
 
-	const skills = useMetadata("skillSet")
+	//const skills = useMetadata("skillSet")
 
-	const [userSkills, setUserSkills] = React.useState({})
-	const [jobSkills, setJobSkills] = React.useState({})
+	//const [userSkills, setUserSkills] = React.useState({})
+	//const [jobSkills, setJobSkills] = React.useState({})
 
 	const primaryColor = theme.palette.primary.main
 	const secondaryColor = theme.palette.secondary.main
@@ -72,7 +71,7 @@ export default () => {
 		],
 	}
 
-	const data = {
+	/*{const data = {
 		labels: skills && skills.options && skills.options.sort(),
 		datasets: [
 			{
@@ -88,8 +87,9 @@ export default () => {
 				borderColor: secondaryColor,
 			},
 		],
-	}
+	}}*/
 
+	//console.log("Hi")
 	return (
 		<div>
 			<Grid container direction="row" spacing={2}>
@@ -109,14 +109,14 @@ export default () => {
 						</CardContent>
 					</Card>
 				</Grid>
-				<Grid item>
+				{/*<Grid item>
 					<Card>
 						<CardHeader title="Market demand" />
 						<CardContent>
 							<Line data={data} />
 						</CardContent>
 					</Card>
-				</Grid>
+				</Grid>*/}
 			</Grid>
 		</div>
 	)
