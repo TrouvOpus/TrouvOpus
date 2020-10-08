@@ -60,24 +60,28 @@ export default () => {
 				justify="space-between"
 			>
 				<Grid item>
-					<Card className={classes.card}>
-						<CardContent>
-							<Typography variant="h5" align="center">
-								Worried about finding a job? TrouvOpus makes your life easier.
-							</Typography>
-						</CardContent>
-						<CardMedia component="img" image={StressImg} />
-					</Card>
+					<Link to="/profile">
+						<Card className={classes.card}>
+							<CardContent>
+								<Typography variant="h5" align="center">
+									Worried about finding a job? TrouvOpus makes your life easier.
+								</Typography>
+							</CardContent>
+							<CardMedia component="img" image={StressImg} />
+						</Card>
+					</Link>
 				</Grid>
 				<Grid item>
-					<Card className={classes.card}>
-						<CardMedia component="img" image={Match} />
-						<CardContent>
-							<Typography variant="h5" align="center">
-								Find your dream job.
-							</Typography>
-						</CardContent>
-					</Card>
+					<Link to="/feed">
+						<Card className={classes.card}>
+							<CardMedia component="img" image={Match} />
+							<CardContent>
+								<Typography variant="h5" align="center">
+									Find your dream job.
+								</Typography>
+							</CardContent>
+						</Card>
+					</Link>
 				</Grid>
 			</Grid>
 

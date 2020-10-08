@@ -10,10 +10,11 @@ import {
 	useTheme,
 	Grid,
 } from "@material-ui/core"
-
+import { Radar } from "react-chartjs-2"
 import { Favorite, ExpandMore } from "@material-ui/icons"
 import SkillSelector from "../components/SkillSelector"
 import Progress from "../components/Progress"
+import { useMetadata } from "../hooks"
 
 export default ({
 	item,
@@ -24,7 +25,21 @@ export default ({
 }) => {
 	const [open, setOpen] = React.useState(false)
 	const theme = useTheme()
-	const expandable = type === "job" && item.description
+	const skillSet =
+		(item &&
+			selfItem &&
+			item.skills &&
+			selfItem.skills && [
+				...new Set([
+					...Object.keys(item.skills),
+					...Object.keys(selfItem.skills),
+				]),
+			]) ||
+		[]
+	const expandable = (type === "job" && item.description) || true
+
+	const primaryColor = theme.palette.primary.main
+	const secondaryColor = theme.palette.secondary.main
 
 	function getSkills() {
 		let sk = []
@@ -39,6 +54,26 @@ export default ({
 				})
 			)
 		return sk
+	}
+
+	function getGraphData() {
+		return {
+			labels: skillSet || [],
+			datasets: [
+				{
+					label: "My Skills",
+					data: skillSet && skillSet.map(s => selfItem.skills[s] || 0.0),
+					borderColor: primaryColor,
+					backgroundColor: primaryColor + "55",
+				},
+				{
+					label: "Required Skills",
+					data: skillSet && skillSet.map(s => item.skills[s] || 0.0),
+					borderColor: secondaryColor,
+					backgroundColor: secondaryColor + "55",
+				},
+			],
+		}
 	}
 
 	return (
@@ -74,6 +109,7 @@ export default ({
 					{expandable && (
 						<Collapse in={open}>
 							<CardContent>{item.description}</CardContent>
+							<Radar data={getGraphData()} />
 						</Collapse>
 					)}
 					<CardActionArea>

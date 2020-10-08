@@ -8,7 +8,6 @@ import {
 	makeStyles,
 	useMediaQuery,
 } from "@material-ui/core"
-import { cyan, amber } from "@material-ui/core/colors"
 import { SnackbarProvider } from "notistack"
 
 import Routes from "./Routes"
