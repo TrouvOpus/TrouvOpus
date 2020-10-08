@@ -61,7 +61,7 @@ export default ({
 			labels: skillSet || [],
 			datasets: [
 				{
-					label: "My Skills",
+					label: type === "applicant" ? "My Skills" : "Applicant's Skills",
 					data: skillSet && skillSet.map(s => selfItem.skills[s] || 0.0),
 					borderColor: primaryColor,
 					backgroundColor: primaryColor + "55",

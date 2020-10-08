@@ -63,7 +63,6 @@ export default () => {
 						uSk[s] += u.skills[s]
 					})
 			)
-		setUserSkills(uSk)
 		console.log("User Skills", uSk)
 		let jSk = {}
 		if (jobs)
@@ -76,7 +75,6 @@ export default () => {
 					})
 			)
 		setJobSkills(jSk)
-		console.log("Job Skills", jSk)
 	}, [users, jobs, skillSet])
 
 	const jobSeeker = {
@@ -126,7 +124,7 @@ export default () => {
 	return (
 		<Grid container direction="column" spacing={3}>
 			<Grid item>
-				<Grid container direction="row" justify="space-between">
+				<Grid container direction="row" spacing={3}>
 					<Grid item>
 						<Card>
 							<CardHeader title="Job Seekers" />
