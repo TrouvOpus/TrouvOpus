@@ -14,7 +14,6 @@ import { useAuth } from "../hooks"
 import Title from "../assets/images/trouvopus.png"
 import StressImg from "../assets/images/stress.png"
 import Match from "../assets/images/match.png"
-
 import Dashboard from "../components/Dashboard"
 
 const useStyles = makeStyles(theme => ({

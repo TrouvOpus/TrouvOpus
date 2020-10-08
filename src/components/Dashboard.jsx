@@ -6,7 +6,7 @@ import {
 	CardContent,
 	useTheme,
 } from "@material-ui/core"
-import { Pie, Line } from "react-chartjs-2"
+import { Pie, Line, Chart } from "react-chartjs-2"
 import FirebaseContext from "../contexts/FirebaseContext"
 import { useMetadata } from "../hooks"
 
@@ -106,43 +106,51 @@ export default () => {
 				label: "Resume",
 				data: skillSet && skillSet.map(s => userSkills[s]),
 				borderColor: primaryColor,
+				backgroundColor: primaryColor + "55",
 			},
 			{
 				label: "Ads",
 				data: skillSet && skillSet.map(s => jobSkills[s]),
 				borderColor: secondaryColor,
+				backgroundColor: secondaryColor + "55",
 			},
 		],
 	}
 
+	Chart.scaleService.updateScaleDefaults("linear", {
+		ticks: {
+			min: 0,
+		},
+	})
+
 	return (
-		<div>
-			<Grid container direction="row" spacing={2}>
-				<Grid item>
-					<Card>
-						<CardHeader title="Job Seekers" />
-						<CardContent>
-							<Pie data={jobSeeker} />
-						</CardContent>
-					</Card>
-				</Grid>
-				<Grid item>
-					<Card>
-						<CardHeader title="Ad Status" />
-						<CardContent>
-							<Pie data={adStatus} />
-						</CardContent>
-					</Card>
-				</Grid>
-				<Grid item>
-					<Card>
-						<CardHeader title="Market Demand" />
-						<CardContent>
-							<Line data={data} />
-						</CardContent>
-					</Card>
+		<Grid container direction="column" spacing={3}>
+			<Grid item>
+				<Grid container direction="row" justify="space-between">
+					<Grid item>
+						<Card>
+							<CardHeader title="Job Seekers" />
+							<CardContent>
+								<Pie data={jobSeeker} />
+							</CardContent>
+						</Card>
+					</Grid>
+					<Grid item>
+						<Card>
+							<CardHeader title="Ad Status" />
+							<CardContent>
+								<Pie data={adStatus} />
+							</CardContent>
+						</Card>
+					</Grid>
 				</Grid>
 			</Grid>
-		</div>
+			<Card>
+				<CardHeader title="Market Demand" center />
+				<CardContent>
+					<Line data={data} />
+				</CardContent>
+			</Card>
+		</Grid>
 	)
 }

@@ -1,13 +1,10 @@
 import React from "react"
 import {
 	Avatar,
-	Box,
-	Button,
 	Card,
 	CardHeader,
 	CardContent,
 	CircularProgress,
-	Grid,
 	List,
 	ListSubheader,
 	ListItem,
@@ -15,7 +12,7 @@ import {
 	ListItemText,
 } from "@material-ui/core"
 import { useAuth, useMatchable } from "../hooks"
-import { Redirect, Link } from "react-router-dom"
+import { Redirect } from "react-router-dom"
 import FirebaseContext from "../contexts/FirebaseContext"
 
 function MatchList({ type, uid }) {
@@ -70,29 +67,18 @@ export default () => {
 	) : currentUser === undefined ? (
 		<CircularProgress />
 	) : (
-		<Grid container direction="column">
-			<Grid item>
-				<Box py={2}>
-					<Button color="primary" variant="contained" component={Link} to="/">
-						Home
-					</Button>
-				</Box>
-			</Grid>
-			<Grid item>
-				<Card>
-					<CardHeader title="Notifications" />
-					<CardContent>
-						<List>
-							<ListSubheader>Jobs</ListSubheader>
-							<MatchList type="user" uid={uid} />
-							<ListSubheader>Applicants</ListSubheader>
-							{jobs.map(j => (
-								<MatchList key={j} type="job" uid={j} />
-							))}
-						</List>
-					</CardContent>
-				</Card>
-			</Grid>
-		</Grid>
+		<Card>
+			<CardHeader title="Notifications" />
+			<CardContent>
+				<List>
+					<ListSubheader>Jobs</ListSubheader>
+					<MatchList type="user" uid={uid} />
+					<ListSubheader>Applicants</ListSubheader>
+					{jobs.map(j => (
+						<MatchList key={j} type="job" uid={j} />
+					))}
+				</List>
+			</CardContent>
+		</Card>
 	)
 }

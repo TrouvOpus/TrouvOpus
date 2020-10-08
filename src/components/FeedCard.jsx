@@ -15,16 +15,29 @@ import { Favorite, ExpandMore } from "@material-ui/icons"
 import SkillSelector from "../components/SkillSelector"
 import Progress from "../components/Progress"
 
-export default ({ item, onLike = () => {}, liked = false, type = "job" }) => {
+export default ({
+	item,
+	selfItem,
+	onLike = () => {},
+	liked = false,
+	type = "job",
+}) => {
 	const [open, setOpen] = React.useState(false)
 	const theme = useTheme()
 	const expandable = type === "job" && item.description
 
 	function getSkills() {
 		let sk = []
-		Object.keys((item && item.skills) || {}).forEach(i =>
-			sk.push({ id: Math.random(), title: i, rating: item.skills[i] })
-		)
+		selfItem &&
+			selfItem.skills &&
+			Object.keys((item && item.skills) || {}).forEach(i =>
+				sk.push({
+					id: Math.random(),
+					title: i,
+					rating: item.skills[i] || 0.0,
+					sRating: selfItem.skills[i] || 0.0,
+				})
+			)
 		return sk
 	}
 

@@ -60,7 +60,7 @@ export default ({ skills, dispatch }) => {
 		return (
 			(skillSet &&
 				skillSet.options &&
-				skillSet.options.filter(s => chosenSkill.indexOf(s) === -1)) ||
+				skillSet.options.sort().filter(s => chosenSkill.indexOf(s) === -1)) ||
 			[]
 		)
 	}

@@ -1,8 +1,8 @@
 import React from "react"
 import FeedCard from "../components/FeedCard"
-import { Redirect, Link } from "react-router-dom"
+import { Redirect } from "react-router-dom"
 import { CircularProgress } from "@material-ui/core"
-import { Box, Button, Grid } from "@material-ui/core"
+import { Grid } from "@material-ui/core"
 import { useFeed, useAuth, useMatchable } from "../hooks"
 
 export default ({ type, uid }) => {
@@ -28,36 +28,35 @@ export default ({ type, uid }) => {
 			: currentUser && currentUser.uid === id
 	}
 
+	function getFeed() {
+		return Object.keys(feed.items)
+			.sort((a, b) => feed.items[b].compatibility - feed.items[a].compatibility)
+			.filter(i => feed.items[i]["active"] && !isSelf(i))
+	}
+
 	return currentUser === null ? (
 		<Redirect to="/login" />
 	) : currentUser === undefined ? (
 		<CircularProgress />
 	) : (
 		<Grid container justifyItems="center" direction="column">
-			<Box py={2}>
-				<Button color="primary" variant="contained" component={Link} to="/">
-					Home
-				</Button>
-			</Box>
-			{Object.keys(feed.items)
-				.sort(
-					(a, b) => feed.items[b].compatibility - feed.items[a].compatibility
-				)
-				.map(i => {
-					return (
-						feed.items[i]["active"] &&
-						!isSelf(i) && (
+			{getFeed().length === 0
+				? type === "applicant"
+					? "No jobs available"
+					: "No applicants available"
+				: getFeed().map(i => {
+						return (
 							<Grid item xs>
 								<FeedCard
 									key={i}
+									selfItem={item}
 									item={{ ...feed.items[i], id: i }}
 									liked={item && item.likes && item.likes.includes(i)}
 									onLike={() => like(i)}
 								/>
 							</Grid>
 						)
-					)
-				})}
+				  })}
 		</Grid>
 	)
 }
