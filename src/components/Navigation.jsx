@@ -5,7 +5,7 @@ import {
 	BottomNavigationAction,
 	makeStyles,
 } from "@material-ui/core"
-import { Person, Inbox, Message, Home, PostAdd } from "@material-ui/icons"
+import { Person, Inbox, Message, Dashboard, PostAdd } from "@material-ui/icons"
 
 const useStyles = makeStyles({
 	root: {
@@ -18,9 +18,9 @@ const useStyles = makeStyles({
 
 const links = [
 	{
-		to: "/",
-		name: "Home",
-		icon: <Home />,
+		to: "/dashboard",
+		name: "Dashboard",
+		icon: <Dashboard />,
 	},
 	{
 		to: "/profile",

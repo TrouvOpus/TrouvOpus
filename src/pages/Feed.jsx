@@ -1,7 +1,13 @@
 import React from "react"
 import FeedCard from "../components/FeedCard"
 import { Redirect } from "react-router-dom"
-import { Grid, CircularProgress, useTheme } from "@material-ui/core"
+import {
+	Card,
+	CardContent,
+	Grid,
+	CircularProgress,
+	useTheme,
+} from "@material-ui/core"
 import { Pie } from "react-chartjs-2"
 import { useFeed, useAuth, useMatchable } from "../hooks"
 
@@ -62,9 +68,13 @@ export default ({ type, uid }) => {
 	) : currentUser === undefined ? (
 		<CircularProgress />
 	) : (
-		<Grid container justifyItems="center" direction="column">
+		<Grid container justifyItems="center" direction="column" spacing={2}>
 			<Grid item>
-				<Pie data={matchData} />
+				<Card>
+					<CardContent>
+						<Pie data={matchData} height={75} />
+					</CardContent>
+				</Card>
 			</Grid>
 			{getFeed().length === 0
 				? type === "applicant"
@@ -72,7 +82,7 @@ export default ({ type, uid }) => {
 					: "No applicants available"
 				: getFeed().map(i => {
 						return (
-							<Grid item xs>
+							<Grid item>
 								<FeedCard
 									key={i}
 									selfItem={item}

@@ -14,7 +14,6 @@ import { Radar } from "react-chartjs-2"
 import { Favorite, ExpandMore } from "@material-ui/icons"
 import SkillSelector from "../components/SkillSelector"
 import Progress from "../components/Progress"
-import { useMetadata } from "../hooks"
 
 export default ({
 	item,
@@ -79,54 +78,49 @@ export default ({
 	return (
 		item &&
 		item.compatibility >= 0 && (
-			<Box m={2}>
-				<Card>
-					<CardContent>
-						<Grid container direction="row" spacing={2} justify="space-between">
-							<Grid item>
-								<Typography variant="h6" component="h6">
-									{type === "job" && item.title}
-								</Typography>
-								<Typography color="textSecondary" gutterBottom>
-									{~~(item.compatibility * 100) + "% match"}
-								</Typography>
-							</Grid>
-							<Grid item>
-								<Progress
-									value={item && item.compatibility * 100}
-									variant="static"
-									style={{
-										bottom:
-											theme.palette.grey[
-												theme.palette.type === "light" ? 200 : 700
-											],
-									}}
-								/>
-							</Grid>
+			<Card>
+				<CardContent>
+					<Grid container direction="row" spacing={2} justify="space-between">
+						<Grid item>
+							<Typography variant="h6" component="h6">
+								{type === "job" && item.title}
+							</Typography>
+							<Typography color="textSecondary" gutterBottom>
+								{~~(item.compatibility * 100) + "% match"}
+							</Typography>
 						</Grid>
-						<SkillSelector skills={getSkills()} />
-					</CardContent>
+						<Grid item>
+							<Progress
+								value={item && item.compatibility * 100}
+								variant="static"
+								style={{
+									bottom:
+										theme.palette.grey[
+											theme.palette.type === "light" ? 200 : 700
+										],
+								}}
+							/>
+						</Grid>
+					</Grid>
+					<SkillSelector skills={getSkills()} />
+				</CardContent>
+				{expandable && (
+					<Collapse in={open}>
+						<CardContent>{item.description}</CardContent>
+						<Radar data={getGraphData()} />
+					</Collapse>
+				)}
+				<CardActionArea>
+					<IconButton onClick={onLike} color={liked ? "secondary" : "default"}>
+						<Favorite />
+					</IconButton>
 					{expandable && (
-						<Collapse in={open}>
-							<CardContent>{item.description}</CardContent>
-							<Radar data={getGraphData()} />
-						</Collapse>
-					)}
-					<CardActionArea>
-						<IconButton
-							onClick={onLike}
-							color={liked ? "secondary" : "default"}
-						>
-							<Favorite />
+						<IconButton onClick={() => setOpen(!open)}>
+							<ExpandMore />
 						</IconButton>
-						{expandable && (
-							<IconButton onClick={() => setOpen(!open)}>
-								<ExpandMore />
-							</IconButton>
-						)}
-					</CardActionArea>
-				</Card>
-			</Box>
+					)}
+				</CardActionArea>
+			</Card>
 		)
 	)
 }

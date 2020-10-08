@@ -5,6 +5,7 @@ import {
 	CardHeader,
 	CardContent,
 	useTheme,
+	useMediaQuery,
 } from "@material-ui/core"
 import { Bar, Chart, Doughnut } from "react-chartjs-2"
 import FirebaseContext from "../contexts/FirebaseContext"
@@ -12,6 +13,7 @@ import { useAuth, useMatchable } from "../hooks"
 
 export default () => {
 	const theme = useTheme()
+	const landscape = useMediaQuery("(orientation: landscape)")
 	const { Firestore } = React.useContext(FirebaseContext)
 	const { currentUser } = useAuth()
 	const { item: user } = useMatchable(
@@ -84,7 +86,7 @@ export default () => {
 
 	return (
 		<Grid container direction="row" spacing={2}>
-			<Grid item xs="4">
+			<Grid item xs={landscape ? "4" : "12"}>
 				<Card>
 					<CardHeader title="My Ads" />
 					<CardContent>
@@ -92,7 +94,7 @@ export default () => {
 					</CardContent>
 				</Card>
 			</Grid>
-			<Grid item xs="8">
+			<Grid item xs={landscape ? "8" : "12"}>
 				<Card>
 					<CardHeader title="My Skills" />
 					<CardContent>

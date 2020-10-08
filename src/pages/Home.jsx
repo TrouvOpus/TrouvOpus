@@ -14,7 +14,6 @@ import { useAuth } from "../hooks"
 import Title from "../assets/images/trouvopus.png"
 import StressImg from "../assets/images/stress.png"
 import Match from "../assets/images/match.png"
-import Dashboard from "../components/Dashboard"
 
 const useStyles = makeStyles(theme => ({
 	card: {
@@ -60,33 +59,29 @@ export default () => {
 				justify="space-between"
 			>
 				<Grid item>
-					<Link to="/profile">
-						<Card className={classes.card}>
-							<CardContent>
-								<Typography variant="h5" align="center">
-									Worried about finding a job? TrouvOpus makes your life easier.
-								</Typography>
-							</CardContent>
+					<Card className={classes.card}>
+						<CardContent>
+							<Typography variant="h5" align="center">
+								Worried about finding a job? TrouvOpus makes your life easier.
+							</Typography>
+						</CardContent>
+						<Link to="/profile">
 							<CardMedia component="img" image={StressImg} />
-						</Card>
-					</Link>
+						</Link>
+					</Card>
 				</Grid>
 				<Grid item>
-					<Link to="/feed">
-						<Card className={classes.card}>
+					<Card className={classes.card}>
+						<Link to="/feed">
 							<CardMedia component="img" image={Match} />
-							<CardContent>
-								<Typography variant="h5" align="center">
-									Find your dream job.
-								</Typography>
-							</CardContent>
-						</Card>
-					</Link>
+						</Link>
+						<CardContent>
+							<Typography variant="h5" align="center">
+								Find your dream job.
+							</Typography>
+						</CardContent>
+					</Card>
 				</Grid>
-			</Grid>
-
-			<Grid item>
-				<Dashboard />
 			</Grid>
 		</div>
 	)

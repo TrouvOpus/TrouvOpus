@@ -3,6 +3,7 @@ import { Switch, Route } from "react-router-dom"
 
 import Login from "./pages/Login"
 import Profile from "./pages/Profile"
+import Dashboard from "./pages/Dashboard"
 import Feed from "./pages/Feed"
 import Ads from "./pages/Ads"
 import Activity from "./pages/Activity"
@@ -18,6 +19,7 @@ export default () => {
 			<Switch>
 				<Route path="/login" component={Login} />
 				<Route path="/profile" component={Profile} />
+				<Route path="/dashboard" component={Dashboard} />
 				<Route path="/feed">
 					<Feed type="applicant" uid={currentUser && currentUser.uid} />
 				</Route>

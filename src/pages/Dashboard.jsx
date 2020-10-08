@@ -8,7 +8,7 @@ import {
 	useTheme,
 	useMediaQuery,
 } from "@material-ui/core"
-import { People, WorkOutline } from "@material-ui/icons"
+import { FindInPage, People, WorkOutline } from "@material-ui/icons"
 import { Chart, Line, Pie } from "react-chartjs-2"
 import FirebaseContext from "../contexts/FirebaseContext"
 import { useMetadata } from "../hooks"
@@ -29,6 +29,8 @@ export default () => {
 	const [userSkills, setUserSkills] = React.useState([])
 	const [jobSkills, setJobSkills] = React.useState([])
 
+	const [applicants, setApplicants] = React.useState([])
+
 	const primaryColor = theme.palette.primary.main
 	const secondaryColor = theme.palette.secondary.main
 
@@ -40,7 +42,9 @@ export default () => {
 				snapshot.forEach(doc => {
 					u.push({ ...doc.data(), id: doc.id })
 				})
+				const app = u.filter(u => u.active)
 				setUsers(u)
+				setApplicants(app)
 			})
 	}, [Firestore])
 
@@ -143,7 +147,7 @@ export default () => {
 					</CardContent>
 				</Card>
 			</Grid>
-			<Grid item>
+			<Grid item xs={landscape ? "4" : "6"}>
 				<Card>
 					<CardContent>
 						<Grid container direction="row" spacing={2}>
@@ -160,7 +164,7 @@ export default () => {
 					</CardContent>
 				</Card>
 			</Grid>
-			<Grid item>
+			<Grid item xs={landscape ? "4" : "6"}>
 				<Card>
 					<CardContent>
 						<Grid container direction="row" spacing={2}>
@@ -177,33 +181,16 @@ export default () => {
 					</CardContent>
 				</Card>
 			</Grid>
-			<Grid item>
+			<Grid item xs={landscape ? "4" : "12"}>
 				<Card>
 					<CardContent>
 						<Grid container direction="row" spacing={2}>
 							<Grid item>
-								<WorkOutline color="secondary" />
+								<FindInPage color="secondary" />
 							</Grid>
 							<Grid item>
 								<Typography variant="h5" component="h5">
-									{jobs.length}
-								</Typography>
-								<Typography color="textSecondary">Total Jobs</Typography>
-							</Grid>
-						</Grid>
-					</CardContent>
-				</Card>
-			</Grid>
-			<Grid item>
-				<Card>
-					<CardContent>
-						<Grid container direction="row" spacing={2}>
-							<Grid item>
-								<WorkOutline color="secondary" />
-							</Grid>
-							<Grid item>
-								<Typography variant="h5" component="h5">
-									{}
+									{applicants.length}
 								</Typography>
 								<Typography color="textSecondary">Total Applicants</Typography>
 							</Grid>
