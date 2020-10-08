@@ -22,6 +22,12 @@ export default ({ type, uid }) => {
 		updateItem({ ...newDoc })
 	}
 
+	function isSelf(id) {
+		return type === "applicant"
+			? currentUser && currentUser.uid === feed.items[id]["createdBy"]
+			: currentUser && currentUser.uid === id
+	}
+
 	return currentUser === null ? (
 		<Redirect to="/login" />
 	) : currentUser === undefined ? (
@@ -39,7 +45,8 @@ export default ({ type, uid }) => {
 				)
 				.map(i => {
 					return (
-						feed.items[i]["active"] && (
+						feed.items[i]["active"] &&
+						!isSelf(i) && (
 							<Grid item xs>
 								<FeedCard
 									key={i}
