@@ -54,6 +54,7 @@ export function clearSkills() {
 
 export default ({ skills, dispatch }) => {
 	const skillSet = useMetadata("skillSet")
+	console.log("SkillSelector", skillSet)
 
 	function filterSkill() {
 		let chosenSkill = skills && skills.map(s => s.title)

@@ -8,7 +8,7 @@ import {
 } from "@material-ui/core"
 import { Pie, Line } from "react-chartjs-2"
 import FirebaseContext from "../contexts/FirebaseContext"
-//import { useMetadata } from "../hooks"
+import { useMetadata } from "../hooks"
 
 export default () => {
 	const theme = useTheme()
@@ -19,10 +19,11 @@ export default () => {
 	const [jobs, setJobs] = React.useState(0)
 	const activeJobs = (jobs && jobs.filter(j => j.active)) || []
 
-	//const skills = useMetadata("skillSet")
+	const skills = useMetadata("skillSet")
+	const skillSet = skills && skills.options && skills.options.sort()
 
-	//const [userSkills, setUserSkills] = React.useState({})
-	//const [jobSkills, setJobSkills] = React.useState({})
+	const [userSkills, setUserSkills] = React.useState([])
+	const [jobSkills, setJobSkills] = React.useState([])
 
 	const primaryColor = theme.palette.primary.main
 	const secondaryColor = theme.palette.secondary.main
@@ -51,6 +52,33 @@ export default () => {
 			})
 	}, [Firestore])
 
+	React.useEffect(() => {
+		let uSk = {}
+		if (users)
+			users.forEach(
+				u =>
+					u.skills &&
+					Object.keys(u.skills).forEach(s => {
+						if (!uSk[s]) uSk[s] = 0.0
+						uSk[s] += u.skills[s]
+					})
+			)
+		setUserSkills(uSk)
+		console.log("User Skills", uSk)
+		let jSk = {}
+		if (jobs)
+			jobs.forEach(
+				j =>
+					j.skills &&
+					Object.keys(j.skills).forEach(s => {
+						if (!jSk[s]) jSk[s] = 0.0
+						jSk[s] += j.skills[s]
+					})
+			)
+		setJobSkills(jSk)
+		console.log("Job Skills", jSk)
+	}, [users, jobs, skillSet])
+
 	const jobSeeker = {
 		labels: ["Active", "Inactive"],
 		datasets: [
@@ -71,25 +99,22 @@ export default () => {
 		],
 	}
 
-	/*{const data = {
-		labels: skills && skills.options && skills.options.sort(),
+	const data = {
+		labels: skillSet,
 		datasets: [
 			{
 				label: "Resume",
-				data: [33, 53, 85, 41, 44, 65],
-				fill: true,
+				data: skillSet && skillSet.map(s => userSkills[s]),
 				borderColor: primaryColor,
 			},
 			{
 				label: "Ads",
-				data: [33, 25, 35, 51, 54, 76],
-				fill: false,
+				data: skillSet && skillSet.map(s => jobSkills[s]),
 				borderColor: secondaryColor,
 			},
 		],
-	}}*/
+	}
 
-	//console.log("Hi")
 	return (
 		<div>
 			<Grid container direction="row" spacing={2}>
@@ -109,14 +134,14 @@ export default () => {
 						</CardContent>
 					</Card>
 				</Grid>
-				{/*<Grid item>
+				<Grid item>
 					<Card>
-						<CardHeader title="Market demand" />
+						<CardHeader title="Market Demand" />
 						<CardContent>
 							<Line data={data} />
 						</CardContent>
 					</Card>
-				</Grid>*/}
+				</Grid>
 			</Grid>
 		</div>
 	)
