@@ -9,6 +9,7 @@ import Ads from "./pages/Ads"
 import Activity from "./pages/Activity"
 import Home from "./pages/Home"
 import Error from "./pages/Error"
+import CustomerSupport from "./pages/CustomerSupport"
 
 import { useAuth } from "./hooks"
 
@@ -25,6 +26,9 @@ export default () => {
 				</Route>
 				<Route path="/ads" component={Ads} />
 				<Route path="/activity" component={Activity} />
+				<Route path="/cs">
+					<CustomerSupport></CustomerSupport>
+				</Route>
 				<Route exact path="/" component={Home} />
 				<Route component={Error} />
 			</Switch>

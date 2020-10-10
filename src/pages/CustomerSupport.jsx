@@ -20,7 +20,7 @@ import { withSnackbar } from "notistack"
 export default withSnackbar(({ enqueueSnackbar, open, onClose, uid }) => {
 	const theme = useTheme()
 	const fullScreen = useMediaQuery(theme.breakpoints.down("sm"))
-	const [description, setDescription] = React.useState()
+	const [reportdetails, setreportdetails] = React.useState()
 	const [isLoading, setIsLoading] = React.useState(false)
 
 	function submit() {
@@ -31,7 +31,7 @@ export default withSnackbar(({ enqueueSnackbar, open, onClose, uid }) => {
 
 	return (
 		<Dialog
-			open={open}
+			open={true}
 			onClose={onClose}
 			fullScreen={fullScreen}
 			scroll="paper"
@@ -82,10 +82,10 @@ export default withSnackbar(({ enqueueSnackbar, open, onClose, uid }) => {
 									<Grid item>
 										<TextField
 											label="If other, please specify:"
-											value={description}
+											value={reportdetails}
 											multiline
 											fullWidth
-											onChange={e => setDescription(e.target.value)}
+											onChange={e => setreportdetails(e.target.value)}
 										/>
 									</Grid>
 								</Grid>
