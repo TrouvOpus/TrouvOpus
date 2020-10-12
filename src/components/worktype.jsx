@@ -7,7 +7,7 @@ import ListItemText from "@material-ui/core/ListItemText"
 import DialogTitle from "@material-ui/core/DialogTitle"
 import Dialog from "@material-ui/core/Dialog"
 import Typography from "@material-ui/core/Typography"
-import { Box, Grid } from "@material-ui/core"
+import { Box, Grid, FormLabel } from "@material-ui/core"
 
 const work = ["Work From Home", "Internship", "Full Time", "Part Time"]
 
@@ -62,8 +62,9 @@ export default function () {
 	return (
 		<Box p={4} width="100%">
 			<Grid container direction="row" spacing={3}>
-				<Grid container direction="row" spacing={3}>
+				<Grid container direction="row" spacing={6}>
 					<Grid item>
+						<FormLabel>Work Type:</FormLabel>
 						<Typography variant="subtitle1"> {selectedValue}</Typography>
 						<Box width={150}></Box>
 					</Grid>
