@@ -23,6 +23,7 @@ import SkillSelector, {
 	addSkill,
 } from "../components/SkillSelector"
 import { withSnackbar } from "notistack"
+import WorkType from "../components/worktype"
 
 export default withSnackbar(({ enqueueSnackbar, open, onClose, uid }) => {
 	const theme = useTheme()
@@ -146,6 +147,9 @@ export default withSnackbar(({ enqueueSnackbar, open, onClose, uid }) => {
 									fullWidth
 									onChange={e => setDescription(e.target.value)}
 								/>
+							</Grid>
+							<Grid item>
+								<WorkType />
 							</Grid>
 							<Grid item>
 								<SkillSelector skills={skill} dispatch={dispatchSkill} />
