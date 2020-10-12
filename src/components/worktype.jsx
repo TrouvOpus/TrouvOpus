@@ -60,7 +60,7 @@ export default function () {
 	}
 
 	return (
-		<Box p={2} width="100%">
+		<Box p={4} width="100%">
 			<Grid container direction="row" spacing={3}>
 				<Grid container direction="row" spacing={3}>
 					<Grid item>
