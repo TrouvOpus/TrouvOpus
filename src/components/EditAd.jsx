@@ -24,6 +24,7 @@ import SkillSelector, {
 } from "../components/SkillSelector"
 import { withSnackbar } from "notistack"
 import WorkType from "../components/worktype"
+import LinearIndeterminate from "../components/linearprogress"
 
 export default withSnackbar(({ enqueueSnackbar, open, onClose, uid }) => {
 	const theme = useTheme()
@@ -90,6 +91,7 @@ export default withSnackbar(({ enqueueSnackbar, open, onClose, uid }) => {
 			fullScreen={fullScreen}
 			scroll="paper"
 		>
+			<LinearIndeterminate></LinearIndeterminate>
 			<form
 				onSubmit={event => {
 					event.preventDefault()
