@@ -10,6 +10,7 @@ import Activity from "./pages/Activity"
 import Home from "./pages/Home"
 import Error from "./pages/Error"
 import CustomerSupport from "./pages/CustomerSupport"
+import Chat from "./components/chat"
 
 import { useAuth } from "./hooks"
 
@@ -26,11 +27,12 @@ export default () => {
 				</Route>
 				<Route path="/ads" component={Ads} />
 				<Route path="/activity" component={Activity} />
+				<Route path="/chat" component={Chat} />
 				<Route path="/cs">
 					<CustomerSupport></CustomerSupport>
 				</Route>
 				<Route exact path="/" component={Home} />
-				<Route component={Error} />
+				<Route component={Error} />s
 			</Switch>
 		</div>
 	)
