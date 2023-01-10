@@ -32,9 +32,7 @@ export function useFeed(type: "applicant" | "recruiter", id: string) {
 	}>({})
 
 	const getAllItems = React.useCallback(
-		async function (
-			collection: "users" | "jobs"
-		): Promise<{
+		async function (collection: "users" | "jobs"): Promise<{
 			[id: string]: firebase.firestore.DocumentData
 		}> {
 			let items: { [id: string]: firebase.firestore.DocumentData } = {}
